@@ -23,6 +23,9 @@
     --brillo: #5B3DF5;
     --brillo-tenue: rgba(91, 61, 245, .16);
     --sobre-brillo: #FFFFFF;
+    --aura-1: #7A5CFF; --aura-2: #3FB8E6; --aura-3: #FF74B8;
+    --vidrio: rgba(255, 255, 255, .44);
+    --reflejo: rgba(255, 255, 255, .95);
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -33,13 +36,17 @@
       --brillo: #9B87FF;
       --brillo-tenue: rgba(155, 135, 255, .18);
       --sobre-brillo: #15132A;
+      --niebla: #0E0C1F;
+      --aura-1: #5B3DF5; --aura-2: #1C7FA8; --aura-3: #A0307A;
+      --vidrio: rgba(28, 25, 58, .48);
+      --reflejo: rgba(255, 255, 255, .35);
     }
   }
   * { box-sizing: border-box; margin: 0; }
   [hidden] { display: none !important; }
-  html, body { height: 100%; }
+  html { height: 100%; background: var(--niebla); }
+  body { min-height: 100%; }
   body {
-    background: var(--niebla);
     color: var(--tinta);
     font: 400 17px/1.55 "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
     padding: env(safe-area-inset-top, 0px) 24px env(safe-area-inset-bottom, 0px);
@@ -47,7 +54,24 @@
     place-items: center;
     text-align: center;
   }
-  main { max-width: 30rem; padding: 48px 0; }
+  main {
+    position: relative; max-width: 28rem; padding: 44px 32px 40px; border-radius: 32px;
+    background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 38%), var(--vidrio);
+    -webkit-backdrop-filter: blur(26px) saturate(175%); backdrop-filter: blur(26px) saturate(175%);
+    box-shadow: inset 0 1px 1px var(--reflejo), 0 18px 50px -18px rgba(44, 22, 140, .35);
+  }
+  main::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(150deg, var(--reflejo), rgba(255,255,255,.08) 32%, rgba(255,255,255,0) 62%, rgba(255,255,255,.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  }
+  .aura { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .aura span { position: absolute; width: 58vmax; height: 58vmax; border-radius: 50%; filter: blur(80px); opacity: .55; animation: deriva 40s ease-in-out infinite alternate; }
+  .aura span:nth-child(1) { background: var(--aura-1); top: -20vmax; left: -14vmax; }
+  .aura span:nth-child(2) { background: var(--aura-2); bottom: -26vmax; right: -16vmax; animation-duration: 48s; animation-delay: -14s; }
+  .aura span:nth-child(3) { background: var(--aura-3); top: 28%; left: 42%; width: 36vmax; height: 36vmax; opacity: .38; animation-duration: 56s; animation-delay: -22s; }
+  @keyframes deriva { to { transform: translate(9vmax, 7vmax) scale(1.14); } }
 
   /* El fantasma con ondas de "toque" NFC */
   .marca { position: relative; width: 112px; height: 112px; margin: 0 auto 32px; }
@@ -74,7 +98,7 @@
     cursor: pointer;
   }
   .boton:focus-visible { outline: 3px solid var(--brillo-tenue); outline-offset: 3px; }
-  .pie { margin-top: 48px; font-size: 14px; }
+  .pie { margin-top: 36px; font-size: 14px; }
 
   /* Vistas: inicio (sin id) y tarjeta (con id) */
   .vista-tarjeta { display: none; }
@@ -86,17 +110,19 @@
   @media (prefers-reduced-motion: reduce) {
     .onda, .flota { animation: none; }
     .onda { display: none; }
+    .aura span { animation: none; }
   }
 </style>
 </head>
 <body>
+<div class="aura" aria-hidden="true"><span></span><span></span><span></span></div>
 
 <!-- Fantasma reutilizable -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="fantasma" viewBox="0 0 64 64">
     <path fill="currentColor" d="M32 6C19.8 6 12 15 12 27v29l6.7-5 6.6 5 6.7-5 6.7 5 6.6-5L52 56V27C52 15 44.2 6 32 6Z"/>
-    <circle cx="25" cy="28" r="3.4" fill="var(--niebla)"/>
-    <circle cx="39" cy="28" r="3.4" fill="var(--niebla)"/>
+    <circle cx="25" cy="28" r="3.4" fill="#fff"/>
+    <circle cx="39" cy="28" r="3.4" fill="#fff"/>
   </symbol>
 </svg>
 

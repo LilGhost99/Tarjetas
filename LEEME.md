@@ -1,33 +1,33 @@
 # Tarjetas LilGhost Studio
 
-Qué hace cada archivo:
-
 | Archivo | Para qué sirve | ¿Lo editas? |
 |---|---|---|
 | `ajustes.js` | Nombre del negocio, WhatsApp y estadísticas | Sí, una vez |
-| `tarjetas.json` | La lista de tarjetas y a dónde lleva cada una | Lo genera el panel |
+| `tarjetas.json` | La lista de tarjetas y a dónde lleva cada una | Lo maneja el panel |
+| `acceso.json` | Usuarios del panel (todo va cifrado) | Lo maneja el panel |
 | `index.html` | Recibe a quien escanea y lo manda al link | No |
-| `panel/index.html` | Tu panel para agregar tarjetas y bajar los QR | No |
-| `panel/qrcode.js` | Librería que dibuja los QR (licencia MIT, Kazuhiko Arase) | No |
+| `panel/index.html` | Tu panel para administrar tarjetas | No |
+| `panel/qrcode.js` | Librería que dibuja los QR (MIT, Kazuhiko Arase) | No |
 
-## Seguridad
+## Cómo funciona el acceso
 
-- Solo quien entre a tu cuenta de GitHub puede cambiar a dónde llevan las tarjetas. Ten activada la verificación en dos pasos (2FA).
-- El token del panel se guarda solo en tu navegador. Nunca lo pegues en `ajustes.js` ni en ningún archivo del repositorio.
-- Si pierdes tu celular o compu: GitHub → Settings → Developer settings → Fine-grained tokens → borra el token.
+- Cada persona entra con su usuario y contraseña.
+- El token de GitHub va cifrado en `acceso.json`. Sin la contraseña correcta no se puede sacar.
+- Contraseñas de 12 caracteres o más. Una frase sirve: `tacos-al-pastor-2026`.
 
-## Para cambiar o agregar tarjetas
+## Tareas del administrador (panel → Usuarios)
 
-1. Abre tu panel: `https://lilghost99.github.io/tarjetas/panel/`
-2. Agrega, edita o pausa tarjetas.
-3. Da clic en **Publicar ahora** (si conectaste GitHub en el panel).
-   Si no lo conectaste: **Descargar tarjetas.json** → en GitHub **Add file → Upload files** → **Commit changes**.
-4. Espera 1 o 2 minutos.
+- **Agregar persona:** usuario + contraseña. Pásale la contraseña en persona.
+- **Quitar persona:** pide un token nuevo de GitHub. Después borra el viejo en GitHub.
+- **Cambiar token:** cada 90 días, cuando venza. Después borra el viejo en GitHub.
+
+Crear token: https://github.com/settings/personal-access-tokens/new
+(Only select repositories → tarjetas · Contents: Read and write)
 
 ## Para grabar una tarjeta NFC
 
-1. En el panel da clic en **Copiar dirección** de la tarjeta.
-2. Abre **NFC Tools** → Escribir → Agregar registro → URL/URI → pega la dirección.
-3. Toca **Escribir** y acerca la tarjeta al celular.
+1. En el panel da clic en **Copiar dirección**.
+2. **NFC Tools** → Escribir → Agregar registro → URL/URI → pega.
+3. **Escribir** y acerca la tarjeta. Luego ponle contraseña en Otros → Establecer contraseña.
 
-Consejo: si un cliente deja de pagar, usa **Pausar** en lugar de borrar.
+Si un cliente deja de pagar, usa **Pausar** en lugar de borrar.
