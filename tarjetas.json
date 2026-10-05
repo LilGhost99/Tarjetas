@@ -1,9 +1,4 @@
 {
-  "LG001": {
-    "cliente": "Tarjeta de prueba",
-    "link": "https://www.google.com",
-    "activa": true
-  },
   "LG002": {
     "cliente": "Prueba 2",
     "link": "https://v2.streameast.ga/",
