@@ -14,151 +14,251 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* ================= Colores ================= */
   :root {
-    --niebla: #EEF0F7;
-    --papel: #FFFFFF;
-    --tinta: #1C1A33;
-    --suave: #6B6985;
-    --linea: #DDDEEB;
+    --fondo: #E6E7F5;
+    --aura-1: #7A5CFF;
+    --aura-2: #3FB8E6;
+    --aura-3: #FF74B8;
+    --tinta: #17152E;
+    --suave: #5D5A7A;
+    --linea: rgba(23, 21, 46, .10);
+    --vidrio: rgba(255, 255, 255, .44);
+    --vidrio-solido: rgba(255, 255, 255, .82);
+    --campo: rgba(255, 255, 255, .55);
+    --campo-borde: rgba(255, 255, 255, .75);
+    --reflejo: rgba(255, 255, 255, .95);
+    --sombra: 0 18px 50px -18px rgba(44, 22, 140, .35);
     --brillo: #5B3DF5;
-    --brillo-tenue: #ECE8FF;
-    --pausa: #A86A12;
-    --pausa-tenue: #FBF0DC;
-    --peligro: #B4372F;
     --sobre-brillo: #FFFFFF;
+    --brillo-tenue: rgba(91, 61, 245, .12);
+    --pausa: #9A5E0A;
+    --pausa-tenue: rgba(240, 170, 60, .22);
+    --peligro: #B4372F;
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --niebla: #15132A;
-      --papel: #1E1B38;
-      --tinta: #ECEBF7;
-      --suave: #A3A1BF;
-      --linea: #312D55;
-      --brillo: #9B87FF;
-      --brillo-tenue: #2B2459;
-      --pausa: #E6B25C;
-      --pausa-tenue: #3A2E18;
+      --fondo: #0E0C1F;
+      --aura-1: #5B3DF5;
+      --aura-2: #1C7FA8;
+      --aura-3: #A0307A;
+      --tinta: #EEEDFA;
+      --suave: #A9A6C9;
+      --linea: rgba(255, 255, 255, .09);
+      --vidrio: rgba(28, 25, 58, .48);
+      --vidrio-solido: rgba(30, 27, 62, .92);
+      --campo: rgba(255, 255, 255, .06);
+      --campo-borde: rgba(255, 255, 255, .12);
+      --reflejo: rgba(255, 255, 255, .35);
+      --sombra: 0 18px 50px -18px rgba(0, 0, 0, .7);
+      --brillo: #A08CFF;
+      --sobre-brillo: #120F26;
+      --brillo-tenue: rgba(160, 140, 255, .16);
+      --pausa: #F0BE6A;
+      --pausa-tenue: rgba(240, 190, 106, .14);
       --peligro: #FF8A80;
-      --sobre-brillo: #15132A;
     }
   }
+
+  /* ================= Base ================= */
   * { box-sizing: border-box; margin: 0; }
+  html { background: var(--fondo); }
   body {
-    background: var(--niebla);
+    min-height: 100vh;
     color: var(--tinta);
     font: 400 15px/1.5 "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
     padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
     font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
   }
   button, input { font: inherit; color: inherit; }
   :focus-visible { outline: 3px solid var(--brillo); outline-offset: 2px; }
   [hidden] { display: none !important; }
+  .contenedor { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
 
-  .contenedor { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-
-  /* ---------- Encabezado ---------- */
-  header.contenedor { padding-top: 28px; padding-bottom: 24px; }
-  .encabezado { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .encabezado svg { width: 38px; height: 38px; color: var(--brillo); flex: none; }
-  .encabezado h1 { font-size: 22px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
-  .encabezado small { display: block; color: var(--suave); font-size: 14px; font-weight: 400; letter-spacing: 0; }
-  .sello {
-    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
-    padding: 7px 14px; border-radius: 999px; background: var(--papel);
-    border: 1px solid var(--linea); font-size: 14px; color: var(--suave);
+  /* Fondo vivo: lo que el vidrio deja ver borroso */
+  .aura { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .aura span {
+    position: absolute; width: 58vmax; height: 58vmax; border-radius: 50%;
+    filter: blur(80px); opacity: .55; animation: deriva 40s ease-in-out infinite alternate;
   }
-  .sello::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2FA36B; }
-  .sello.pendiente { color: var(--tinta); border-color: var(--brillo); }
-  .sello.pendiente::before { background: var(--brillo); }
+  .aura span:nth-child(1) { background: var(--aura-1); top: -20vmax; left: -14vmax; }
+  .aura span:nth-child(2) { background: var(--aura-2); bottom: -26vmax; right: -16vmax; animation-duration: 48s; animation-delay: -14s; }
+  .aura span:nth-child(3) { background: var(--aura-3); top: 28%; left: 42%; width: 36vmax; height: 36vmax; opacity: .38; animation-duration: 56s; animation-delay: -22s; }
+  @keyframes deriva { to { transform: translate(9vmax, 7vmax) scale(1.14); } }
 
-  /* ---------- Aviso para publicar ---------- */
-  .publicar {
-    background: var(--brillo); color: var(--sobre-brillo); border-radius: 20px;
-    padding: 22px 24px; margin-bottom: 24px;
-    display: grid; grid-template-columns: 1fr auto; gap: 18px 28px; align-items: center;
+  /* ================= Vidrio líquido ================= */
+  .vidrio, .dialogo {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 38%),
+      var(--vidrio);
+    -webkit-backdrop-filter: blur(26px) saturate(175%);
+    backdrop-filter: blur(26px) saturate(175%);
+    box-shadow:
+      inset 0 1px 1px var(--reflejo),
+      inset 0 -10px 24px -18px rgba(255, 255, 255, .5),
+      var(--sombra);
+    border-radius: 24px;
   }
-  .publicar h2 { font-size: 18px; font-weight: 700; }
-  .publicar ol { padding-left: 20px; margin-top: 6px; opacity: .92; }
-  .publicar .acciones { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-  .publicar .btn-primario { background: #fff; color: #2A1A9E; }
-  .publicar .btn-fantasma { color: var(--sobre-brillo); border-color: currentColor; }
-
-  .nota {
-    background: var(--papel); border: 1px dashed var(--linea); border-radius: 16px;
-    padding: 16px 20px; margin-bottom: 24px; color: var(--suave);
+  .vidrio { position: relative; }
+  /* Borde que brilla arriba-izquierda y abajo-derecha, como canto de vidrio */
+  .vidrio::before, .dialogo::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(150deg, var(--reflejo), rgba(255, 255, 255, .08) 32%, rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, .45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   }
-  .nota strong { color: var(--tinta); }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .vidrio, .dialogo { background: var(--vidrio-solido); }
+  }
 
-  /* ---------- Distribución ---------- */
-  .rejilla { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; padding-bottom: 60px; }
-  .lateral { display: grid; gap: 16px; position: sticky; top: 20px; }
-  .caja { background: var(--papel); border: 1px solid var(--linea); border-radius: 20px; padding: 22px; }
-  .caja h2 { font-size: 17px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 16px; }
+  /* ================= Pantalla de acceso ================= */
+  .pantalla-acceso { min-height: 100vh; display: grid; place-items: center; padding: 32px 20px; }
+  .tarjeta-acceso {
+    width: 100%; max-width: 400px; padding: 40px 32px 32px; border-radius: 32px; overflow: hidden;
+  }
+  .tarjeta-acceso::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(420px circle at var(--x, 25%) var(--y, -10%), rgba(255, 255, 255, .32), transparent 46%);
+    transition: opacity .3s;
+  }
+  .tarjeta-acceso > * { position: relative; z-index: 1; }
+  .logo { display: block; width: 56px; height: 56px; color: var(--brillo); margin: 0 auto 18px; filter: drop-shadow(0 6px 14px rgba(91, 61, 245, .35)); }
+  .tarjeta-acceso h1 { text-align: center; font-size: 28px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+  .tarjeta-acceso .sub { text-align: center; color: var(--suave); margin: 4px 0 28px; }
+  .tarjeta-acceso .intro { color: var(--suave); margin-bottom: 18px; text-align: center; }
 
+  /* ================= Formularios ================= */
   label { display: block; font-weight: 500; margin-bottom: 14px; }
-  label span { display: block; font-size: 13px; color: var(--suave); font-weight: 400; margin-top: 2px; }
-  input[type=text], input[type=url], input[type=search] {
+  label > span { display: block; font-size: 13px; color: var(--suave); font-weight: 400; margin-top: 4px; }
+  input[type=text], input[type=url], input[type=search], input[type=password] {
     display: block; width: 100%; margin-top: 6px;
-    background: var(--niebla); border: 1px solid transparent; border-radius: 10px;
-    padding: 11px 13px;
+    background: var(--campo); border: 1px solid var(--campo-borde); border-radius: 12px;
+    padding: 11px 13px; box-shadow: inset 0 1px 2px rgba(23, 21, 46, .06);
   }
-  input:focus { outline: none; border-color: var(--brillo); background: var(--papel); }
+  input::placeholder { color: var(--suave); opacity: .75; }
+  input:focus { outline: none; border-color: var(--brillo); box-shadow: 0 0 0 3px var(--brillo-tenue); }
+  .check { display: flex; gap: 10px; align-items: center; font-weight: 400; color: var(--suave); }
+  .check input { width: 18px; height: 18px; accent-color: var(--brillo); }
   .error-campo { color: var(--peligro); font-size: 14px; margin: -4px 0 14px; }
 
+  /* ================= Botones ================= */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    border: 1px solid var(--linea); background: transparent; border-radius: 999px;
+    border: 1px solid var(--campo-borde); background: var(--campo); border-radius: 999px;
     padding: 9px 16px; cursor: pointer; font-weight: 500; white-space: nowrap;
     text-decoration: none; color: inherit;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5);
+    transition: transform .15s ease, background .15s ease;
   }
-  .btn:hover { border-color: var(--suave); }
-  .btn-primario { background: var(--brillo); border-color: transparent; color: var(--sobre-brillo); }
-  .btn-primario:hover { filter: brightness(1.08); border-color: transparent; }
+  .btn:hover { background: var(--vidrio); }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .6; cursor: progress; }
+  .btn-primario {
+    color: var(--sobre-brillo); border-color: transparent;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, 0) 55%), var(--brillo);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 8px 22px -8px var(--brillo);
+  }
+  .btn-primario:hover { background: linear-gradient(180deg, rgba(255, 255, 255, .36), rgba(255, 255, 255, 0) 55%), var(--brillo); }
   .btn-ancho { width: 100%; padding: 12px 16px; }
+  .btn-chico { padding: 6px 12px; font-size: 14px; }
+  .btn-borrar { color: var(--peligro); }
   .fila-botones { display: flex; gap: 8px; }
   .fila-botones .btn { flex: 1; }
 
-  /* Diseño del QR */
-  .opciones { display: flex; gap: 8px; margin-top: 6px; }
-  .opcion { flex: 1; }
-  .opcion input { position: absolute; opacity: 0; pointer-events: none; }
-  .opcion div {
-    border: 1px solid var(--linea); border-radius: 10px; padding: 9px; text-align: center;
-    cursor: pointer; font-weight: 500;
+  /* ================= Barra superior ================= */
+  .barra {
+    position: sticky; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 5;
+    margin: 12px auto 24px; max-width: 1100px; width: calc(100% - 40px);
+    border-radius: 999px; padding: 10px 12px 10px 16px;
   }
-  .opcion input:checked + div { border-color: var(--brillo); background: var(--brillo-tenue); }
-  .opcion input:focus-visible + div { outline: 3px solid var(--brillo); outline-offset: 2px; }
-  .colores { display: flex; gap: 8px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
-  .muestra {
-    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--papel);
-    box-shadow: 0 0 0 1px var(--linea); cursor: pointer; padding: 0;
+  .encabezado { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .encabezado svg { width: 34px; height: 34px; color: var(--brillo); flex: none; }
+  .encabezado h1 { font-size: 17px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .encabezado small { display: block; color: var(--suave); font-size: 13px; font-weight: 400; letter-spacing: 0; }
+  .sello {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border-radius: 999px; font-size: 14px; color: var(--suave);
   }
-  .muestra[aria-pressed=true] { box-shadow: 0 0 0 2px var(--brillo); }
-  .colores input[type=color] { width: 30px; height: 30px; border: 0; padding: 0; background: none; cursor: pointer; }
-  .aviso-color { color: var(--pausa); font-size: 13px; margin-top: 8px; }
+  .sello::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2FA36B; box-shadow: 0 0 0 3px rgba(47, 163, 107, .18); }
+  .sello.pendiente { color: var(--tinta); }
+  .sello.pendiente::before { background: var(--brillo); box-shadow: 0 0 0 3px var(--brillo-tenue); }
+  .quien { color: var(--suave); font-size: 14px; }
+  .quien b { color: var(--tinta); font-weight: 500; }
 
-  details summary { cursor: pointer; font-weight: 700; font-size: 17px; list-style: none; }
+  /* ================= Aviso para publicar ================= */
+  .publicar {
+    display: grid; grid-template-columns: 1fr auto; gap: 16px 28px; align-items: center;
+    padding: 20px 24px; margin-bottom: 24px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .25), rgba(255, 255, 255, 0) 50%),
+      color-mix(in srgb, var(--brillo) 82%, transparent);
+    color: var(--sobre-brillo);
+  }
+  .publicar h2 { font-size: 18px; font-weight: 700; }
+  .publicar p { opacity: .9; margin-top: 4px; }
+  .publicar .acciones { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .publicar .btn { color: var(--sobre-brillo); background: transparent; border-color: currentColor; box-shadow: none; }
+  .publicar .btn-blanco { background: rgba(255, 255, 255, .92); color: #2A1A9E; border-color: transparent; box-shadow: inset 0 1px 0 #fff, 0 6px 16px -8px rgba(0, 0, 0, .4); }
+
+  /* ================= Distribución ================= */
+  .rejilla { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; padding-bottom: 60px; }
+  .lateral { display: grid; gap: 16px; position: sticky; top: 96px; }
+  .caja { padding: 22px; }
+  .caja h2, .caja summary { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+  .caja h2 { margin-bottom: 16px; }
+  .caja h3 { font-size: 15px; font-weight: 700; margin: 20px 0 10px; }
+  details summary { cursor: pointer; list-style: none; }
   details summary::-webkit-details-marker { display: none; }
   details summary::after { content: "+"; float: right; color: var(--suave); font-weight: 400; }
   details[open] summary::after { content: "–"; }
   details[open] summary { margin-bottom: 14px; }
   .texto-suave { color: var(--suave); font-size: 14px; }
 
-  /* ---------- Lista de tarjetas ---------- */
-  .barra-lista { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
-  .barra-lista h2 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
-  .barra-lista .cuenta { color: var(--suave); font-size: 15px; font-weight: 400; margin-left: 6px; }
-  .barra-lista input { margin: 0 0 0 auto; max-width: 260px; background: var(--papel); border-color: var(--linea); }
-
-  .lista { list-style: none; padding: 0; background: var(--papel); border: 1px solid var(--linea); border-radius: 20px; overflow: hidden; }
-  .tarjeta {
-    display: grid; grid-template-columns: 104px 1fr; gap: 20px;
-    padding: 20px; border-top: 1px solid var(--linea);
+  /* Diseño del QR */
+  .opciones { display: flex; gap: 8px; margin-top: 6px; }
+  .opcion { flex: 1; margin: 0; }
+  .opcion input { position: absolute; opacity: 0; pointer-events: none; }
+  .opcion div {
+    border: 1px solid var(--campo-borde); background: var(--campo); border-radius: 12px;
+    padding: 9px; text-align: center; cursor: pointer; font-weight: 500;
   }
+  .opcion input:checked + div { border-color: var(--brillo); background: var(--brillo-tenue); color: var(--brillo); }
+  .opcion input:focus-visible + div { outline: 3px solid var(--brillo); outline-offset: 2px; }
+  .colores { display: flex; gap: 8px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+  .muestra {
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .8);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .15); cursor: pointer; padding: 0;
+  }
+  .muestra[aria-pressed=true] { box-shadow: 0 0 0 2px var(--brillo); }
+  .colores input[type=color] { width: 30px; height: 30px; border: 0; padding: 0; background: none; cursor: pointer; }
+  .aviso-color { color: var(--pausa); font-size: 13px; margin-top: 8px; }
+
+  /* Usuarios */
+  .usuarios { list-style: none; padding: 0; }
+  .usuarios li { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-top: 1px solid var(--linea); }
+  .usuarios li:first-child { border-top: 0; }
+  .usuarios .nombre { font-weight: 500; }
+  .usuarios .btn { margin-left: auto; }
+  .etiqueta { font-size: 12px; font-weight: 500; padding: 2px 9px; border-radius: 999px; background: var(--brillo-tenue); color: var(--brillo); }
+  .etiqueta.tenue { background: var(--campo); color: var(--suave); }
+
+  /* ================= Lista de tarjetas ================= */
+  .barra-lista { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+  .barra-lista h2 { font-size: 30px; font-weight: 700; letter-spacing: -.03em; }
+  .barra-lista .cuenta { color: var(--suave); font-size: 16px; font-weight: 400; margin-left: 8px; letter-spacing: 0; }
+  .barra-lista input { margin: 0 0 0 auto; max-width: 260px; border-radius: 999px; padding-left: 16px; }
+
+  .lista { list-style: none; padding: 0; overflow: hidden; }
+  .tarjeta { display: grid; grid-template-columns: 108px 1fr; gap: 20px; padding: 20px; border-top: 1px solid var(--linea); }
   .tarjeta:first-child { border-top: 0; }
   .tarjeta.editando { background: var(--brillo-tenue); }
-  .qr { width: 104px; height: 104px; border-radius: 12px; overflow: hidden; border: 1px solid var(--linea); background: #fff; }
+  .qr {
+    width: 108px; height: 108px; border-radius: 16px; overflow: hidden; background: #fff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .8), 0 8px 20px -10px rgba(23, 21, 46, .35);
+  }
   .qr svg { display: block; width: 100%; height: 100%; }
   .tarjeta.pausada .qr { opacity: .35; }
   .cabeza { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
@@ -171,18 +271,29 @@
   .direccion b { color: var(--tinta); font-weight: 500; }
   .acciones-tarjeta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   .acciones-tarjeta .btn { padding: 7px 13px; font-size: 14px; }
-  .btn-borrar { color: var(--peligro); }
 
   .vacio { padding: 56px 24px; text-align: center; color: var(--suave); }
-  .vacio svg { width: 54px; height: 54px; color: var(--linea); margin-bottom: 12px; }
+  .vacio svg { width: 54px; height: 54px; color: var(--brillo); opacity: .35; margin-bottom: 12px; }
   .vacio strong { display: block; color: var(--tinta); font-size: 17px; margin-bottom: 4px; }
 
-  /* ---------- Mensaje flotante ---------- */
+  /* ================= Diálogo ================= */
+  .dialogo {
+    border: 0; color: var(--tinta); padding: 28px; width: min(440px, calc(100% - 32px));
+    background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 38%), var(--vidrio-solido);
+  }
+  .dialogo::backdrop { background: rgba(14, 12, 31, .35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .dialogo h2 { font-size: 20px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 10px; }
+  .dialogo ol { padding-left: 20px; margin: 10px 0 16px; color: var(--suave); }
+  .dialogo a { color: var(--brillo); }
+
+  /* ================= Mensaje flotante ================= */
   .toast {
-    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-    transform: translate(-50%, 20px); opacity: 0;
-    background: var(--tinta); color: var(--niebla); padding: 11px 20px; border-radius: 999px;
-    font-weight: 500; transition: .25s ease; pointer-events: none; z-index: 10;
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+    transform: translate(-50%, 20px); opacity: 0; max-width: calc(100% - 32px); text-align: center;
+    background: rgba(23, 21, 46, .78); color: #fff; padding: 11px 20px; border-radius: 999px;
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 10px 30px -10px rgba(0, 0, 0, .5);
+    font-weight: 500; transition: .25s ease; pointer-events: none;
   }
   .toast.visible { opacity: 1; transform: translate(-50%, 0); }
 
@@ -192,182 +303,280 @@
     .publicar { grid-template-columns: 1fr; }
     .publicar .acciones { justify-content: flex-start; }
   }
-  @media (max-width: 520px) {
+  @media (max-width: 560px) {
+    .barra { border-radius: 24px; }
+    .sello { margin-left: 0; order: 3; }
+    .quien { order: 4; }
+    #btn-salir { order: 5; margin-left: auto; }
     .tarjeta { grid-template-columns: 76px 1fr; gap: 14px; padding: 16px; }
-    .qr { width: 76px; height: 76px; }
+    .qr { width: 76px; height: 76px; border-radius: 12px; }
     .barra-lista { flex-wrap: wrap; }
     .barra-lista input { max-width: none; margin: 0; }
-    .sello { margin-left: 0; }
+    .tarjeta-acceso { padding: 32px 22px 24px; }
   }
-  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .aura span { animation: none; }
+    .toast, .btn { transition: none; }
+  }
 </style>
 </head>
 <body>
 
+<div class="aura" aria-hidden="true"><span></span><span></span><span></span></div>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="fantasma" viewBox="0 0 64 64">
     <path fill="currentColor" d="M32 6C19.8 6 12 15 12 27v29l6.7-5 6.6 5 6.7-5 6.7 5 6.6-5L52 56V27C52 15 44.2 6 32 6Z"/>
-    <circle cx="25" cy="28" r="3.4" fill="var(--niebla)"/>
-    <circle cx="39" cy="28" r="3.4" fill="var(--niebla)"/>
+    <circle cx="25" cy="28" r="3.4" fill="#fff"/>
+    <circle cx="39" cy="28" r="3.4" fill="#fff"/>
   </symbol>
 </svg>
 
-<header class="contenedor">
-  <div class="encabezado">
-    <svg aria-hidden="true"><use href="#fantasma"/></svg>
-    <h1><span data-negocio>LilGhost Studio</span><small>Panel de tarjetas</small></h1>
-    <span class="sello" id="sello" role="status">Todo publicado</span>
+<!-- ================= ACCESO ================= -->
+<section class="pantalla-acceso" id="pantalla-acceso">
+  <div class="tarjeta-acceso vidrio" id="tarjeta-acceso">
+    <svg class="logo" aria-hidden="true"><use href="#fantasma"/></svg>
+    <h1 data-negocio>LilGhost Studio</h1>
+    <p class="sub">Panel de tarjetas</p>
+
+    <p class="intro" id="acceso-cargando">Cargando…</p>
+
+    <form id="form-entrar" hidden novalidate>
+      <label>Usuario
+        <input type="text" id="e-usuario" autocomplete="username" autocapitalize="none" spellcheck="false">
+      </label>
+      <label>Contraseña
+        <input type="password" id="e-contra" autocomplete="current-password">
+      </label>
+      <label class="check"><input type="checkbox" id="e-recordar"> Recordarme en este dispositivo</label>
+      <p class="error-campo" id="e-error" role="alert" hidden></p>
+      <button class="btn btn-primario btn-ancho" type="submit">Entrar</button>
+    </form>
+
+    <form id="form-crear" hidden novalidate>
+      <p class="intro">Primera vez aquí. Crea tu usuario de administrador.</p>
+      <label>Usuario
+        <input type="text" id="c-usuario" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="josh">
+      </label>
+      <label>Contraseña
+        <input type="password" id="c-contra" autocomplete="new-password">
+        <span>Mínimo 12 caracteres. Una frase sirve: tacos-al-pastor-2026</span>
+      </label>
+      <label>Repite la contraseña
+        <input type="password" id="c-contra2" autocomplete="new-password">
+      </label>
+      <label>Token de GitHub
+        <input type="password" id="c-token" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+        <span>Se guarda cifrado con tu contraseña. Nadie más lo puede leer.</span>
+      </label>
+      <label>Repositorio
+        <input type="text" id="c-repo" autocomplete="off" spellcheck="false" placeholder="lilghost99/tarjetas">
+      </label>
+      <label class="check"><input type="checkbox" id="c-recordar"> Recordarme en este dispositivo</label>
+      <p class="error-campo" id="c-error" role="alert" hidden></p>
+      <button class="btn btn-primario btn-ancho" type="submit">Crear acceso</button>
+    </form>
   </div>
-</header>
+</section>
 
-<div class="contenedor">
-
-  <!-- Aviso: hay cambios que falta subir a GitHub -->
-  <section class="publicar" id="publicar" hidden>
-    <div>
-      <h2 id="publicar-titulo">Tienes cambios sin publicar</h2>
-      <p id="pasos-auto" hidden style="opacity:.92;margin-top:6px">Da <b>Publicar ahora</b> y en 1 o 2 minutos tus tarjetas ya usan los cambios.</p>
-      <ol id="pasos-manual">
-        <li>Descarga el archivo <b>tarjetas.json</b>.</li>
-        <li>En GitHub: <b>Add file → Upload files</b>, arrástralo y da <b>Commit changes</b>.</li>
-        <li>En 1 o 2 minutos tus tarjetas ya usan los cambios.</li>
-      </ol>
+<!-- ================= PANEL ================= -->
+<div id="app" hidden>
+  <header class="barra vidrio">
+    <div class="encabezado">
+      <svg aria-hidden="true"><use href="#fantasma"/></svg>
+      <h1><span data-negocio>LilGhost Studio</span><small>Panel de tarjetas</small></h1>
+      <span class="sello" id="sello" role="status">Todo publicado</span>
+      <span class="quien" id="quien"></span>
+      <button class="btn btn-chico" type="button" id="btn-salir">Salir</button>
     </div>
-    <div class="acciones">
-      <button class="btn btn-fantasma" type="button" id="btn-descartar">Descartar cambios</button>
-      <button class="btn btn-primario" type="button" id="btn-descargar-json">Descargar tarjetas.json</button>
-      <button class="btn btn-primario" type="button" id="btn-publicar" hidden>Publicar ahora</button>
-    </div>
-  </section>
+  </header>
 
-  <!-- Aviso: no se encontró la lista -->
-  <section class="nota" id="nota-sin-lista" hidden>
-    <strong>No encontré tarjetas.json en tu sitio.</strong>
-    Si abriste el panel desde tu computadora y no desde GitHub, ábrelo aquí:
-    <label class="btn" style="display:inline-flex;margin:8px 0 0">
-      Abrir tarjetas.json
-      <input type="file" accept=".json,application/json" id="abrir-archivo" hidden>
-    </label>
-  </section>
+  <div class="contenedor">
+    <section class="publicar vidrio" id="publicar" hidden>
+      <div>
+        <h2>Tienes cambios sin publicar</h2>
+        <p>Da <b>Publicar ahora</b> y en 1 o 2 minutos tus tarjetas ya usan los cambios.</p>
+      </div>
+      <div class="acciones">
+        <button class="btn" type="button" id="btn-descartar">Descartar cambios</button>
+        <button class="btn btn-blanco" type="button" id="btn-publicar">Publicar ahora</button>
+      </div>
+    </section>
 
-  <div class="rejilla">
+    <div class="rejilla">
+      <aside class="lateral">
 
-    <!-- ===== Columna izquierda ===== -->
-    <aside class="lateral">
+        <form class="caja vidrio" id="formulario" novalidate>
+          <h2 id="form-titulo">Nueva tarjeta</h2>
+          <label>Clave de la tarjeta
+            <input type="text" id="f-id" autocomplete="off" spellcheck="false">
+            <span>Se llena sola. Es lo que va grabado en la tarjeta.</span>
+          </label>
+          <label>Cliente
+            <input type="text" id="f-cliente" placeholder="Tacos El Güero" autocomplete="off">
+          </label>
+          <label>¿A dónde lleva?
+            <input type="url" id="f-link" placeholder="Pega aquí el link de reseñas de Google" autocomplete="off">
+            <span>Puede ser reseñas, Instagram, menú, WhatsApp…</span>
+          </label>
+          <p class="error-campo" id="f-error" role="alert" hidden></p>
+          <div class="fila-botones">
+            <button class="btn" type="button" id="btn-cancelar" hidden>Cancelar</button>
+            <button class="btn btn-primario btn-ancho" type="submit" id="btn-guardar">Agregar tarjeta</button>
+          </div>
+        </form>
 
-      <form class="caja" id="formulario" novalidate>
-        <h2 id="form-titulo">Nueva tarjeta</h2>
-        <label>Clave de la tarjeta
-          <input type="text" id="f-id" autocomplete="off" spellcheck="false" required>
-          <span>Se llena sola. Es lo que va grabado en la tarjeta.</span>
-        </label>
-        <label>Cliente
-          <input type="text" id="f-cliente" placeholder="Tacos El Güero" autocomplete="off" required>
-        </label>
-        <label>¿A dónde lleva?
-          <input type="url" id="f-link" placeholder="Pega aquí el link de reseñas de Google" autocomplete="off" required>
-          <span>Puede ser reseñas, Instagram, menú, WhatsApp…</span>
-        </label>
-        <p class="error-campo" id="f-error" hidden></p>
-        <div class="fila-botones">
-          <button class="btn" type="button" id="btn-cancelar" hidden>Cancelar</button>
-          <button class="btn btn-primario btn-ancho" type="submit" id="btn-guardar">Agregar tarjeta</button>
-        </div>
-      </form>
-
-      <div class="caja">
-        <h2>Diseño del QR</h2>
-        <div style="margin-bottom:14px">
-          <div style="font-weight:500">Estilo</div>
-          <div class="opciones">
-            <label class="opcion"><input type="radio" name="estilo" value="cuadros"><div>Cuadros</div></label>
-            <label class="opcion"><input type="radio" name="estilo" value="puntos"><div>Puntos</div></label>
+        <div class="caja vidrio">
+          <h2>Diseño del QR</h2>
+          <div style="margin-bottom:14px">
+            <div style="font-weight:500">Estilo</div>
+            <div class="opciones">
+              <label class="opcion"><input type="radio" name="estilo" value="cuadros"><div>Cuadros</div></label>
+              <label class="opcion"><input type="radio" name="estilo" value="puntos"><div>Puntos</div></label>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:500">Color</div>
+            <div class="colores" id="colores"></div>
+            <p class="aviso-color" id="aviso-color" hidden>Ese color es muy claro. Algunos celulares no podrán leer el QR.</p>
           </div>
         </div>
-        <div>
-          <div style="font-weight:500">Color</div>
-          <div class="colores" id="colores"></div>
-          <p class="aviso-color" id="aviso-color" hidden>Ese color es muy claro. Algunos celulares no podrán leer el QR.</p>
-        </div>
-      </div>
 
-      <details class="caja" id="caja-github">
-        <summary>Publicar con un clic</summary>
-        <p class="texto-suave" id="gh-estado" style="margin-bottom:14px">Conecta tu GitHub para publicar con un botón, sin descargar ni subir archivos.</p>
-        <div id="gh-campos">
-          <label>Token de GitHub
-            <input type="password" id="f-token" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
-            <span>Se guarda solo en este navegador. Nunca lo pegues en ajustes.js ni en GitHub.</span>
+        <details class="caja vidrio" id="caja-usuarios" hidden>
+          <summary>Usuarios</summary>
+          <ul class="usuarios" id="lista-usuarios"></ul>
+
+          <h3>Agregar persona</h3>
+          <form id="form-usuario" novalidate>
+            <label>Usuario
+              <input type="text" id="u-usuario" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="ana">
+            </label>
+            <label>Contraseña
+              <input type="password" id="u-contra" autocomplete="new-password">
+              <span>Mínimo 12 caracteres. Pásasela en persona, no por chat.</span>
+            </label>
+            <label class="check"><input type="checkbox" id="u-admin"> Puede administrar usuarios</label>
+            <p class="error-campo" id="u-error" role="alert" hidden></p>
+            <button class="btn btn-primario btn-ancho" type="submit">Agregar persona</button>
+          </form>
+
+          <h3>Token de GitHub</h3>
+          <p class="texto-suave" style="margin-bottom:12px">Vence cada 90 días. Cuando venza, crea uno nuevo y cámbialo aquí.</p>
+          <button class="btn" type="button" id="btn-renovar">Cambiar token</button>
+        </details>
+
+        <details class="caja vidrio">
+          <summary>Mi contraseña</summary>
+          <form id="form-contra" novalidate>
+            <label>Contraseña actual
+              <input type="password" id="m-actual" autocomplete="current-password">
+            </label>
+            <label>Contraseña nueva
+              <input type="password" id="m-nueva" autocomplete="new-password">
+              <span>Mínimo 12 caracteres.</span>
+            </label>
+            <label>Repite la nueva
+              <input type="password" id="m-nueva2" autocomplete="new-password">
+            </label>
+            <p class="error-campo" id="m-error" role="alert" hidden></p>
+            <button class="btn btn-primario btn-ancho" type="submit">Cambiar contraseña</button>
+          </form>
+        </details>
+
+        <details class="caja vidrio">
+          <summary>Dirección de tus tarjetas</summary>
+          <label>Dirección base
+            <input type="url" id="f-base" spellcheck="false">
+            <span>A esto se le pega la clave de cada tarjeta. Decídela antes de imprimir: lo que se graba ya no se cambia.</span>
           </label>
-          <label>Repositorio
-            <input type="text" id="f-repo" autocomplete="off" spellcheck="false" placeholder="lilghost99/tarjetas">
-          </label>
-          <p class="error-campo" id="gh-error" hidden></p>
-          <button class="btn btn-primario btn-ancho" type="button" id="btn-conectar">Conectar</button>
+          <button class="btn" type="button" id="btn-base-auto">Usar la de este sitio</button>
+          <p class="texto-suave" id="link-escaneos" hidden style="margin-top:14px"></p>
+        </details>
+
+      </aside>
+
+      <main>
+        <div class="barra-lista">
+          <h2>Tarjetas<span class="cuenta" id="cuenta"></span></h2>
+          <input type="search" id="buscar" placeholder="Buscar cliente o clave" aria-label="Buscar">
         </div>
-        <button class="btn" type="button" id="btn-desconectar" hidden>Desconectar este navegador</button>
-      </details>
-
-      <details class="caja" id="caja-direccion">
-        <summary>Dirección de tus tarjetas</summary>
-        <label>Dirección base
-          <input type="url" id="f-base" spellcheck="false">
-          <span>A esto se le pega la clave de cada tarjeta. Decídela antes de imprimir: lo que se graba ya no se cambia.</span>
-        </label>
-        <button class="btn" type="button" id="btn-base-auto">Usar la de este sitio</button>
-        <p class="texto-suave" id="link-escaneos" hidden style="margin-top:14px"></p>
-      </details>
-
-    </aside>
-
-    <!-- ===== Columna derecha: lista ===== -->
-    <main>
-      <div class="barra-lista">
-        <h2>Tarjetas<span class="cuenta" id="cuenta"></span></h2>
-        <input type="search" id="buscar" placeholder="Buscar cliente o clave" aria-label="Buscar">
-      </div>
-      <ul class="lista" id="lista"></ul>
-    </main>
-
+        <ul class="lista vidrio" id="lista"></ul>
+      </main>
+    </div>
   </div>
 </div>
+
+<!-- Diálogo para cambiar token / quitar persona -->
+<dialog class="dialogo" id="dialogo">
+  <form id="form-dialogo" novalidate>
+    <h2 id="d-titulo"></h2>
+    <div id="d-texto"></div>
+    <label>Token nuevo
+      <input type="password" id="d-token" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+    </label>
+    <p class="error-campo" id="d-error" role="alert" hidden></p>
+    <div class="fila-botones">
+      <button class="btn" type="button" id="d-cancelar">Cancelar</button>
+      <button class="btn btn-primario" type="submit" id="d-ok"></button>
+    </div>
+  </form>
+</dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* =========================================================
    PANEL DE TARJETAS — LilGhost Studio
-   Guarda tus cambios en este navegador mientras trabajas.
-   Para publicarlos, descargas tarjetas.json y lo subes a GitHub.
+   - Cada usuario tiene un par de llaves. Su llave privada se
+     cifra con su contraseña; el token de GitHub se cifra con
+     su llave pública. Todo eso vive en acceso.json.
+   - Sin la contraseña correcta, nadie puede sacar el token.
    ========================================================= */
 
 const A = window.AJUSTES || {};
 const $ = s => document.querySelector(s);
-const GUARDADO = { borrador: 'lg-borrador', base: 'lg-base', qr: 'lg-qr', gh: 'lg-github' };
+const GUARDADO = { borrador: 'lg-borrador', base: 'lg-base', qr: 'lg-qr', sesion: 'lg-sesion', viejo: 'lg-github' };
 const COLORES = ['#1C1A33', '#5B3DF5', '#0E6E55', '#B0262F', '#000000'];
+const ITERACIONES = 600000;
+const MIN_CONTRA = 12;
+const LINK_TOKEN = 'https://github.com/settings/personal-access-tokens/new';
 
-let tarjetas = {};        // lo que estás editando
-let publicado = null;     // lo que está en GitHub (texto JSON) o null
-let editando = null;      // clave de la tarjeta en edición
+let sesion = null;        // { usuario, token, repo, admin, recordar }
+let acceso = null;        // contenido de acceso.json
+let tarjetas = {};
+let publicado = null;
+let editando = null;
 let diseno = leer(GUARDADO.qr, { estilo: 'cuadros', color: COLORES[0] });
 
 /* ---------- Utilidades ---------- */
-function leer(clave, porDefecto) {
-  try { const v = localStorage.getItem(clave); return v ? JSON.parse(v) : porDefecto; }
+function leer(clave, porDefecto, almacen = localStorage) {
+  try { const v = almacen.getItem(clave); return v ? JSON.parse(v) : porDefecto; }
   catch (e) { return porDefecto; }
 }
-function guardar(clave, valor) {
-  try { valor === null ? localStorage.removeItem(clave) : localStorage.setItem(clave, JSON.stringify(valor)); } catch (e) {}
+function guardar(clave, valor, almacen = localStorage) {
+  try { valor === null ? almacen.removeItem(clave) : almacen.setItem(clave, JSON.stringify(valor)); } catch (e) {}
 }
 function escapar(t) {
   return String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
-function toast(texto, ms = 2200) {
+function toast(texto, ms = 2400) {
   const t = $('#toast');
   t.textContent = texto;
   t.classList.add('visible');
   clearTimeout(toast.timer);
   toast.timer = setTimeout(() => t.classList.remove('visible'), ms);
+}
+function mostrarError(sel, texto) {
+  const el = $(sel);
+  el.textContent = texto || '';
+  el.hidden = !texto;
+}
+async function ocupado(boton, texto, tarea) {
+  const original = boton.textContent;
+  boton.disabled = true;
+  boton.textContent = texto;
+  try { return await tarea(); }
+  finally { boton.disabled = false; boton.textContent = original; }
 }
 function descargar(blob, nombre) {
   const a = document.createElement('a');
@@ -385,59 +594,66 @@ async function copiar(texto) {
     document.execCommand('copy'); area.remove();
   }
 }
+const limpiarUsuario = u => u.trim().toLowerCase();
+const usuarioValido = u => /^[a-z0-9._-]{2,24}$/.test(u);
 
-/* ---------- Datos ---------- */
-function ordenar(lista) {
-  const salida = {};
-  Object.keys(lista).sort((a, b) => a.localeCompare(b, 'es', { numeric: true })).forEach(k => {
-    const t = lista[k];
-    salida[k] = typeof t === 'string'
-      ? { cliente: '', link: t, activa: true }
-      : { cliente: t.cliente || '', link: t.link || '', activa: t.activa !== false };
-  });
-  return salida;
+/* ---------- Cifrado ---------- */
+const cod = new TextEncoder(), decod = new TextDecoder();
+function aB64(buf) {
+  let s = '';
+  new Uint8Array(buf).forEach(b => s += String.fromCharCode(b));
+  return btoa(s);
 }
-const comoTexto = lista => JSON.stringify(ordenar(lista), null, 2) + '\n';
-const hayCambios = () => comoTexto(tarjetas) !== (publicado ?? comoTexto({}));
+const deB64 = t => Uint8Array.from(atob(t.replace(/\s/g, '')), c => c.charCodeAt(0));
+const aleatorio = n => crypto.getRandomValues(new Uint8Array(n));
+const RSA = { name: 'RSA-OAEP', hash: 'SHA-256' };
 
-function siguienteClave() {
-  let mayor = 0;
-  Object.keys(tarjetas).forEach(k => {
-    const m = k.match(/^LG(\d+)$/);
-    if (m) mayor = Math.max(mayor, Number(m[1]));
-  });
-  return 'LG' + String(mayor + 1).padStart(3, '0');
+async function llaveDeContrasena(contra, sal, iteraciones = ITERACIONES) {
+  const base = await crypto.subtle.importKey('raw', cod.encode(contra), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: sal, iterations: iteraciones, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function cerrarPrivada(pkcs8, contra) {
+  const sal = aleatorio(16), iv = aleatorio(12);
+  const llave = await llaveDeContrasena(contra, sal);
+  const cifrada = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, llave, pkcs8);
+  return { iter: ITERACIONES, sal: aB64(sal), iv: aB64(iv), privada: aB64(cifrada) };
+}
+async function abrirPrivada(u, contra) {
+  const llave = await llaveDeContrasena(contra, deB64(u.sal), u.iter || ITERACIONES);
+  const pkcs8 = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: deB64(u.iv) }, llave, deB64(u.privada));
+  const privada = await crypto.subtle.importKey('pkcs8', pkcs8, RSA, false, ['decrypt']);
+  return { pkcs8, privada };
+}
+async function cifrarToken(publicaB64, token) {
+  const publica = await crypto.subtle.importKey('spki', deB64(publicaB64), RSA, false, ['encrypt']);
+  return aB64(await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publica, cod.encode(token)));
+}
+async function nuevoUsuario(contra, token, admin) {
+  const par = await crypto.subtle.generateKey(
+    { ...RSA, modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]) }, true, ['encrypt', 'decrypt']);
+  const publica = aB64(await crypto.subtle.exportKey('spki', par.publicKey));
+  const pkcs8 = await crypto.subtle.exportKey('pkcs8', par.privateKey);
+  return { admin, publica, ...(await cerrarPrivada(pkcs8, contra)), token: await cifrarToken(publica, token) };
+}
+async function sacarToken(u, contra) {
+  const { privada } = await abrirPrivada(u, contra);
+  return decod.decode(await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privada, deB64(u.token)));
+}
+function tokenValido(t) {
+  if (!t) return 'Pega el token.';
+  if (!/^(github_pat_|ghp_)[A-Za-z0-9_]+$/.test(t)) return 'Eso no parece un token de GitHub. Empieza con github_pat_.';
+  if (t.length > 180) return 'Ese token es demasiado largo.';
+  return '';
 }
 
-function baseAuto() {
-  if (location.protocol === 'file:') return 'https://lilghost99.github.io/tarjetas/?id=';
-  const ruta = location.pathname.replace(/panel\/?(index\.html)?$/, '');
-  return location.origin + ruta + '?id=';
-}
-const base = () => leer(GUARDADO.base, null) || baseAuto();
-const direccionDe = clave => base() + clave;
+/* ---------- GitHub ---------- */
+function a64(texto) { return aB64(cod.encode(texto)); }
+function desde64(b64) { return decod.decode(deB64(b64)); }
 
-/* ---------- GitHub (publicar con un clic) ---------- */
-const conexion = () => leer(GUARDADO.gh, null);
-
-function repoAuto() {
-  if (!location.hostname.endsWith('.github.io')) return '';
-  const usuario = location.hostname.split('.')[0];
-  const primera = location.pathname.split('/')[1];
-  const repo = primera && primera !== 'panel' ? primera : location.hostname;
-  return `${usuario}/${repo}`;
-}
-function a64(texto) {
-  let bin = '';
-  new TextEncoder().encode(texto).forEach(b => bin += String.fromCharCode(b));
-  return btoa(bin);
-}
-function desde64(b64) {
-  const bin = atob(b64.replace(/\s/g, ''));
-  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
-}
-async function github(c, opciones = {}) {
-  const r = await fetch(`https://api.github.com/repos/${c.repo}/contents/tarjetas.json`, {
+async function github(ruta, opciones = {}, c = sesion) {
+  const r = await fetch(`https://api.github.com/repos/${c.repo}/contents/${ruta}`, {
     ...opciones,
     cache: 'no-store',
     headers: {
@@ -450,86 +666,217 @@ async function github(c, opciones = {}) {
   if (!r.ok) { const e = new Error('GitHub ' + r.status); e.status = r.status; throw e; }
   return r.json();
 }
-async function leerDeGitHub(c = conexion()) {
-  const d = await github(c);
-  return { texto: comoTexto(JSON.parse(desde64(d.content))), sha: d.sha };
+async function leerArchivo(ruta, c = sesion) {
+  try {
+    const d = await github(ruta, {}, c);
+    return { texto: desde64(d.content), sha: d.sha };
+  } catch (e) {
+    if (e.status === 404) return { texto: null, sha: null };
+    throw e;
+  }
+}
+function escribirArchivo(ruta, texto, sha, mensaje, c = sesion) {
+  return github(ruta, {
+    method: 'PUT',
+    body: JSON.stringify({ message: mensaje, content: a64(texto), ...(sha ? { sha } : {}) })
+  }, c);
 }
 function mensajeGitHub(e) {
-  if (e.status === 401) return 'El token no es válido o ya venció. Crea uno nuevo.';
+  if (e.status === 401) return sesion && sesion.admin
+    ? 'El token de GitHub venció. Cámbialo en Usuarios → Cambiar token.'
+    : 'El token de GitHub venció. Pídele al administrador que lo cambie.';
   if (e.status === 403) return 'El token no tiene permiso de escritura (Contents: Read and write).';
   if (e.status === 404) return 'No encontré el repositorio o el token no tiene acceso a él.';
-  if (e.status === 409 || e.status === 422) return 'La lista cambió al mismo tiempo. Recarga e intenta otra vez.';
+  if (e.status === 409 || e.status === 422) return 'Alguien cambió esto al mismo tiempo. Recarga e intenta otra vez.';
   return 'No se pudo conectar con GitHub. Revisa tu internet.';
 }
-async function publicarAhora() {
-  const boton = $('#btn-publicar');
-  boton.disabled = true;
-  boton.textContent = 'Publicando…';
-  try {
-    const actual = await leerDeGitHub();
-    if (publicado !== null && actual.texto !== publicado &&
-        !confirm('La lista en GitHub cambió desde otro dispositivo.\nSi publicas ahora, reemplazas esos cambios. ¿Publicar de todos modos?')) return;
-    await github(conexion(), {
-      method: 'PUT',
-      body: JSON.stringify({
-        message: 'Actualizar tarjetas desde el panel',
-        content: a64(comoTexto(tarjetas)),
-        sha: actual.sha
-      })
-    });
-    publicado = comoTexto(tarjetas);
-    guardar(GUARDADO.borrador, null);
-    pintar();
-    toast('Publicado. En 1 o 2 minutos ya funciona.', 3500);
-  } catch (e) {
-    toast(mensajeGitHub(e), 5000);
-  } finally {
-    boton.disabled = false;
-    boton.textContent = 'Publicar ahora';
-  }
+async function cambiarAcceso(cambio, mensaje, token = sesion.token) {
+  const c = { token, repo: sesion.repo };
+  const actual = await leerArchivo('acceso.json', c);
+  const datos = JSON.parse(actual.texto);
+  await cambio(datos);
+  await escribirArchivo('acceso.json', JSON.stringify(datos, null, 2) + '\n', actual.sha, mensaje, c);
+  acceso = datos;
+  pintarUsuarios();
 }
-function pintarConexion() {
-  const c = conexion();
-  $('#gh-campos').hidden = !!c;
-  $('#btn-desconectar').hidden = !c;
-  $('#gh-estado').innerHTML = c
-    ? `Conectado a <b>${escapar(c.repo)}</b>. Tus cambios se publican con el botón <b>Publicar ahora</b>.`
-    : 'Conecta tu GitHub para publicar con un botón, sin descargar ni subir archivos.';
-  if (!c && !$('#f-repo').value) $('#f-repo').value = repoAuto();
+
+/* ---------- Sesión ---------- */
+function leerSesion() {
+  return leer(GUARDADO.sesion, null, sessionStorage) || leer(GUARDADO.sesion, null);
 }
-$('#btn-conectar').addEventListener('click', async () => {
-  const token = $('#f-token').value.trim();
-  const repo = $('#f-repo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/+$/, '');
-  const err = $('#gh-error');
-  err.hidden = true;
-  if (!token) { err.textContent = 'Pega tu token.'; err.hidden = false; return; }
-  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { err.textContent = 'Escribe el repositorio como usuario/nombre.'; err.hidden = false; return; }
-  const boton = $('#btn-conectar');
-  boton.disabled = true; boton.textContent = 'Revisando…';
-  try {
-    const leido = await leerDeGitHub({ token, repo });
-    guardar(GUARDADO.gh, { token, repo });
-    $('#f-token').value = '';
-    publicado = leido.texto;
-    if (!hayCambios()) guardar(GUARDADO.borrador, null);
-    $('#nota-sin-lista').hidden = true;
-    pintarConexion();
-    pintar();
-    toast('GitHub conectado');
-  } catch (e) {
-    err.textContent = mensajeGitHub(e);
-    err.hidden = false;
-  } finally {
-    boton.disabled = false; boton.textContent = 'Conectar';
-  }
+function guardarSesion() {
+  guardar(GUARDADO.sesion, null, sessionStorage);
+  guardar(GUARDADO.sesion, null);
+  guardar(GUARDADO.sesion, sesion, sesion.recordar ? localStorage : sessionStorage);
+}
+function salir(motivo) {
+  guardar(GUARDADO.sesion, null, sessionStorage);
+  guardar(GUARDADO.sesion, null);
+  sesion = null;
+  $('#app').hidden = true;
+  $('#pantalla-acceso').hidden = false;
+  mostrarEntrar(motivo);
+}
+function repoAuto() {
+  if (!location.hostname.endsWith('.github.io')) return '';
+  const usuario = location.hostname.split('.')[0];
+  const primera = location.pathname.split('/')[1];
+  return `${usuario}/${primera && primera !== 'panel' ? primera : location.hostname}`;
+}
+
+/* ---------- Pantalla de acceso ---------- */
+function mostrarEntrar(mensaje) {
+  $('#acceso-cargando').hidden = true;
+  $('#form-crear').hidden = true;
+  $('#form-entrar').hidden = false;
+  mostrarError('#e-error', mensaje);
+  $('#e-contra').value = '';
+  setTimeout(() => ($('#e-usuario').value ? $('#e-contra') : $('#e-usuario')).focus(), 50);
+}
+function mostrarCrear() {
+  $('#acceso-cargando').hidden = true;
+  $('#form-entrar').hidden = true;
+  $('#form-crear').hidden = false;
+  const viejo = leer(GUARDADO.viejo, null);
+  $('#c-repo').value = (viejo && viejo.repo) || repoAuto();
+  if (viejo && viejo.token) $('#c-token').value = viejo.token;
+  setTimeout(() => $('#c-usuario').focus(), 50);
+}
+
+$('#tarjeta-acceso').addEventListener('pointermove', e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty('--x', `${(e.clientX - r.left) / r.width * 100}%`);
+  e.currentTarget.style.setProperty('--y', `${(e.clientY - r.top) / r.height * 100}%`);
 });
-$('#btn-desconectar').addEventListener('click', () => {
-  if (!confirm('¿Desconectar GitHub de este navegador? Tendrás que pegar el token otra vez para publicar con un clic.')) return;
-  guardar(GUARDADO.gh, null);
-  pintarConexion();
+
+$('#form-entrar').addEventListener('submit', async e => {
+  e.preventDefault();
+  const usuario = limpiarUsuario($('#e-usuario').value);
+  const contra = $('#e-contra').value;
+  mostrarError('#e-error', '');
+  if (!usuario || !contra) return mostrarError('#e-error', 'Escribe tu usuario y contraseña.');
+
+  await ocupado(e.submitter || $('#form-entrar button'), 'Entrando…', async () => {
+    const u = acceso && acceso.usuarios && acceso.usuarios[usuario];
+    let token;
+    try {
+      if (!u) {
+        await llaveDeContrasena(contra, aleatorio(16)); // mismo tiempo de espera exista o no el usuario
+        throw new Error('no existe');
+      }
+      token = await sacarToken(u, contra);
+    } catch (_) {
+      return mostrarError('#e-error', 'Usuario o contraseña incorrectos.');
+    }
+    sesion = { usuario, token, repo: acceso.repo, admin: !!u.admin, recordar: $('#e-recordar').checked };
+    try {
+      guardarSesion();
+      await abrirPanel();
+    } catch (err) {
+      guardar(GUARDADO.sesion, null, sessionStorage);
+      guardar(GUARDADO.sesion, null);
+      sesion = null;
+      mostrarError('#e-error', err.status === 401
+        ? 'El acceso se actualizó hace poco. Espera 2 minutos y vuelve a entrar.'
+        : mensajeGitHub(err));
+    }
+  });
+});
+
+$('#form-crear').addEventListener('submit', async e => {
+  e.preventDefault();
+  const usuario = limpiarUsuario($('#c-usuario').value);
+  const contra = $('#c-contra').value;
+  const token = $('#c-token').value.trim();
+  const repo = $('#c-repo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/+$/, '');
+  mostrarError('#c-error', '');
+
+  if (!usuarioValido(usuario)) return mostrarError('#c-error', 'El usuario va en minúsculas, sin espacios (2 a 24 letras o números).');
+  if (contra.length < MIN_CONTRA) return mostrarError('#c-error', `La contraseña necesita al menos ${MIN_CONTRA} caracteres.`);
+  if (contra !== $('#c-contra2').value) return mostrarError('#c-error', 'Las contraseñas no coinciden.');
+  const errToken = tokenValido(token);
+  if (errToken) return mostrarError('#c-error', errToken);
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) return mostrarError('#c-error', 'Escribe el repositorio como usuario/nombre.');
+
+  await ocupado(e.submitter || $('#form-crear button'), 'Creando…', async () => {
+    const c = { token, repo };
+    try {
+      await github('', {}, c);  // revisa que el token pueda ver el repositorio
+      const existente = await leerArchivo('acceso.json', c);
+      if (existente.texto) return mostrarError('#c-error', 'Ya existe un acceso. Espera 2 minutos, recarga y entra con tu usuario.');
+      const datos = { version: 1, repo, usuarios: { [usuario]: await nuevoUsuario(contra, token, true) } };
+      await escribirArchivo('acceso.json', JSON.stringify(datos, null, 2) + '\n', null, `Crear acceso del panel (${usuario})`, c);
+      acceso = datos;
+      guardar(GUARDADO.viejo, null);
+      sesion = { usuario, token, repo, admin: true, recordar: $('#c-recordar').checked };
+      guardarSesion();
+      await abrirPanel();
+      toast('Acceso creado. Bienvenido.');
+    } catch (err) {
+      mostrarError('#c-error', mensajeGitHub(err));
+    }
+  });
+});
+
+$('#btn-salir').addEventListener('click', () => {
+  if (hayCambios() && !confirm('Tienes cambios sin publicar. Se quedan guardados en este navegador. ¿Salir?')) return;
+  salir();
+});
+
+/* ---------- Datos de tarjetas ---------- */
+function ordenar(lista) {
+  const salida = {};
+  Object.keys(lista).sort((a, b) => a.localeCompare(b, 'es', { numeric: true })).forEach(k => {
+    const t = lista[k];
+    salida[k] = typeof t === 'string'
+      ? { cliente: '', link: t, activa: true }
+      : { cliente: t.cliente || '', link: t.link || '', activa: t.activa !== false };
+  });
+  return salida;
+}
+const comoTexto = lista => JSON.stringify(ordenar(lista), null, 2) + '\n';
+const hayCambios = () => publicado !== null && comoTexto(tarjetas) !== publicado;
+
+function siguienteClave() {
+  let mayor = 0;
+  Object.keys(tarjetas).forEach(k => {
+    const m = k.match(/^LG(\d+)$/);
+    if (m) mayor = Math.max(mayor, Number(m[1]));
+  });
+  return 'LG' + String(mayor + 1).padStart(3, '0');
+}
+function baseAuto() {
+  if (location.protocol === 'file:') return 'https://lilghost99.github.io/tarjetas/?id=';
+  return location.origin + location.pathname.replace(/panel\/?(index\.html)?$/, '') + '?id=';
+}
+const base = () => leer(GUARDADO.base, null) || baseAuto();
+const direccionDe = clave => base() + clave;
+
+async function publicarAhora() {
+  await ocupado($('#btn-publicar'), 'Publicando…', async () => {
+    try {
+      const actual = await leerArchivo('tarjetas.json');
+      const textoActual = actual.texto ? comoTexto(JSON.parse(actual.texto)) : comoTexto({});
+      if (textoActual !== publicado &&
+          !confirm('La lista cambió desde otro dispositivo o usuario.\nSi publicas ahora, reemplazas esos cambios. ¿Publicar de todos modos?')) return;
+      await escribirArchivo('tarjetas.json', comoTexto(tarjetas), actual.sha, `Actualizar tarjetas (${sesion.usuario})`);
+      publicado = comoTexto(tarjetas);
+      guardar(GUARDADO.borrador, null);
+      pintar();
+      toast('Publicado. En 1 o 2 minutos ya funciona.', 3500);
+    } catch (e) {
+      toast(mensajeGitHub(e), 5000);
+    }
+  });
+}
+$('#btn-publicar').addEventListener('click', publicarAhora);
+$('#btn-descartar').addEventListener('click', () => {
+  if (!confirm('¿Descartar los cambios y volver a lo que está publicado?')) return;
+  tarjetas = JSON.parse(publicado);
+  guardar(GUARDADO.borrador, null);
+  limpiarFormulario();
   pintar();
 });
-$('#btn-publicar').addEventListener('click', publicarAhora);
 
 /* ---------- QR ---------- */
 function redondeado(x, y, w, h, r) {
@@ -544,7 +891,6 @@ function qrSVG(texto, { color = diseno.color, estilo = diseno.estilo, margen = 4
   const total = n + margen * 2;
   const enEsquina = (f, c) => (f < 7 && c < 7) || (f < 7 && c >= n - 7) || (f >= n - 7 && c < 7);
   let d = '';
-
   for (let f = 0; f < n; f++) {
     for (let c = 0; c < n; c++) {
       if (!q.isDark(f, c)) continue;
@@ -590,7 +936,7 @@ function esClaro(hex) {
   return (.2126 * v[0] + .7152 * v[1] + .0722 * v[2]) > .35;
 }
 
-/* ---------- Pantalla ---------- */
+/* ---------- Pintar lista ---------- */
 function pintar() {
   const claves = Object.keys(ordenar(tarjetas));
   const filtro = $('#buscar').value.trim().toLowerCase();
@@ -599,7 +945,7 @@ function pintar() {
 
   $('#cuenta').textContent = claves.length ? `${claves.length}` : '';
 
-  if (!claves.length || !visibles.length) {
+  if (!visibles.length) {
     $('#lista').innerHTML = `<li class="vacio">
       <svg aria-hidden="true"><use href="#fantasma"/></svg>
       <strong>${claves.length ? 'Nada coincide con tu búsqueda' : 'Todavía no hay tarjetas'}</strong>
@@ -609,23 +955,24 @@ function pintar() {
     $('#lista').innerHTML = visibles.map(k => {
       const t = tarjetas[k];
       const pausada = t.activa === false;
+      const c = escapar(k);
       return `<li class="tarjeta${pausada ? ' pausada' : ''}${editando === k ? ' editando' : ''}">
         <div class="qr">${qrSVG(direccionDe(k))}</div>
         <div>
           <div class="cabeza">
             <h3>${escapar(t.cliente || 'Sin nombre')}</h3>
-            <span class="id">${escapar(k)}</span>
+            <span class="id">${c}</span>
             ${pausada ? '<span class="etiqueta-pausa">Pausada</span>' : ''}
           </div>
           <p class="destino">Lleva a <a href="${escapar(t.link)}" target="_blank" rel="noopener">${escapar(t.link)}</a></p>
           <p class="direccion">Para grabar en el chip: <b>${escapar(direccionDe(k))}</b></p>
           <div class="acciones-tarjeta">
-            <button class="btn" data-accion="copiar" data-clave="${escapar(k)}">Copiar dirección</button>
-            <button class="btn" data-accion="svg" data-clave="${escapar(k)}">QR para imprimir (SVG)</button>
-            <button class="btn" data-accion="png" data-clave="${escapar(k)}">QR imagen (PNG)</button>
-            <button class="btn" data-accion="editar" data-clave="${escapar(k)}">Editar</button>
-            <button class="btn" data-accion="pausar" data-clave="${escapar(k)}">${pausada ? 'Activar' : 'Pausar'}</button>
-            <button class="btn btn-borrar" data-accion="borrar" data-clave="${escapar(k)}">Borrar</button>
+            <button class="btn" data-accion="copiar" data-clave="${c}">Copiar dirección</button>
+            <button class="btn" data-accion="svg" data-clave="${c}">QR para imprimir (SVG)</button>
+            <button class="btn" data-accion="png" data-clave="${c}">QR imagen (PNG)</button>
+            <button class="btn" data-accion="editar" data-clave="${c}">Editar</button>
+            <button class="btn" data-accion="pausar" data-clave="${c}">${pausada ? 'Activar' : 'Pausar'}</button>
+            <button class="btn btn-borrar" data-accion="borrar" data-clave="${c}">Borrar</button>
           </div>
         </div>
       </li>`;
@@ -634,22 +981,16 @@ function pintar() {
 
   const cambios = hayCambios();
   $('#publicar').hidden = !cambios;
-  $('#btn-descartar').hidden = publicado === null;
-  const conectado = !!conexion();
-  $('#btn-publicar').hidden = !conectado;
-  $('#btn-descargar-json').hidden = conectado;
-  $('#pasos-auto').hidden = !conectado;
-  $('#pasos-manual').hidden = conectado;
   $('#sello').textContent = cambios ? 'Cambios sin publicar' : 'Todo publicado';
   $('#sello').classList.toggle('pendiente', cambios);
 }
-
 function guardarBorrador() {
   guardar(GUARDADO.borrador, hayCambios() ? ordenar(tarjetas) : null);
   pintar();
 }
+$('#buscar').addEventListener('input', pintar);
 
-/* ---------- Formulario ---------- */
+/* ---------- Formulario de tarjeta ---------- */
 function limpiarFormulario() {
   editando = null;
   $('#form-titulo').textContent = 'Nueva tarjeta';
@@ -658,19 +999,14 @@ function limpiarFormulario() {
   $('#f-id').value = siguienteClave();
   $('#f-cliente').value = '';
   $('#f-link').value = '';
-  $('#f-error').hidden = true;
+  mostrarError('#f-error', '');
 }
-function error(texto, campo) {
-  $('#f-error').textContent = texto;
-  $('#f-error').hidden = false;
-  if (campo) $(campo).focus();
-}
-
 $('#formulario').addEventListener('submit', e => {
   e.preventDefault();
   const clave = $('#f-id').value.trim().toUpperCase().replace(/\s+/g, '');
   const cliente = $('#f-cliente').value.trim();
   let link = $('#f-link').value.trim();
+  const error = (t, campo) => { mostrarError('#f-error', t); $(campo).focus(); };
 
   if (!/^[A-Z0-9_-]{1,20}$/.test(clave)) return error('La clave solo puede tener letras, números, - o _.', '#f-id');
   if (clave !== editando && tarjetas[clave]) return error(`Ya existe una tarjeta ${clave}.`, '#f-id');
@@ -688,13 +1024,11 @@ $('#formulario').addEventListener('submit', e => {
 });
 $('#btn-cancelar').addEventListener('click', () => { limpiarFormulario(); pintar(); });
 
-/* ---------- Acciones de cada tarjeta ---------- */
 $('#lista').addEventListener('click', async e => {
   const b = e.target.closest('[data-accion]');
   if (!b) return;
   const k = b.dataset.clave;
   const t = tarjetas[k];
-
   switch (b.dataset.accion) {
     case 'copiar':
       await copiar(direccionDe(k));
@@ -710,9 +1044,9 @@ $('#lista').addEventListener('click', async e => {
       $('#f-id').value = k;
       $('#f-cliente').value = t.cliente;
       $('#f-link').value = t.link;
-      $('#f-error').hidden = true;
+      mostrarError('#f-error', '');
       pintar();
-      $('#formulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      $('#formulario').scrollIntoView({ behavior: 'smooth', block: 'center' });
       $('#f-link').focus({ preventScroll: true });
       break;
     case 'pausar':
@@ -729,34 +1063,6 @@ $('#lista').addEventListener('click', async e => {
         guardarBorrador();
       }
       break;
-  }
-});
-
-/* ---------- Publicar / descartar ---------- */
-$('#btn-descargar-json').addEventListener('click', () => {
-  descargar(new Blob([comoTexto(tarjetas)], { type: 'application/json' }), 'tarjetas.json');
-  $('#publicar-titulo').textContent = 'Listo. Ahora súbelo a GitHub';
-});
-$('#btn-descartar').addEventListener('click', () => {
-  if (!confirm('¿Descartar los cambios y volver a lo que está publicado?')) return;
-  tarjetas = JSON.parse(publicado);
-  guardar(GUARDADO.borrador, null);
-  limpiarFormulario();
-  pintar();
-});
-$('#abrir-archivo').addEventListener('change', async e => {
-  const archivo = e.target.files[0];
-  if (!archivo) return;
-  try {
-    publicado = comoTexto(JSON.parse(await archivo.text()));
-    tarjetas = JSON.parse(publicado);
-    guardar(GUARDADO.borrador, null);
-    $('#nota-sin-lista').hidden = true;
-    limpiarFormulario();
-    pintar();
-    toast('Lista cargada');
-  } catch (_) {
-    toast('Ese archivo no es una lista de tarjetas válida');
   }
 });
 
@@ -786,7 +1092,6 @@ document.querySelectorAll('input[name=estilo]').forEach(r => {
 });
 
 /* ---------- Dirección base ---------- */
-$('#f-base').value = base();
 $('#f-base').addEventListener('change', () => {
   let v = $('#f-base').value.trim();
   if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
@@ -802,6 +1107,151 @@ $('#btn-base-auto').addEventListener('click', () => {
   pintar();
 });
 
+/* ---------- Usuarios (administradores) ---------- */
+function pintarUsuarios() {
+  $('#caja-usuarios').hidden = !(sesion && sesion.admin);
+  $('#quien').innerHTML = sesion ? `Hola, <b>${escapar(sesion.usuario)}</b>` : '';
+  if (!acceso || !sesion) return;
+  $('#lista-usuarios').innerHTML = Object.keys(acceso.usuarios).sort().map(u => {
+    const datos = acceso.usuarios[u];
+    return `<li>
+      <span class="nombre">${escapar(u)}</span>
+      ${datos.admin ? '<span class="etiqueta">Administra</span>' : ''}
+      ${u === sesion.usuario
+        ? '<span class="etiqueta tenue">Tú</span>'
+        : `<button class="btn btn-chico btn-borrar" type="button" data-quitar="${escapar(u)}">Quitar</button>`}
+    </li>`;
+  }).join('');
+}
+
+$('#form-usuario').addEventListener('submit', async e => {
+  e.preventDefault();
+  const usuario = limpiarUsuario($('#u-usuario').value);
+  const contra = $('#u-contra').value;
+  mostrarError('#u-error', '');
+  if (!usuarioValido(usuario)) return mostrarError('#u-error', 'El usuario va en minúsculas, sin espacios (2 a 24 letras o números).');
+  if (acceso.usuarios[usuario]) return mostrarError('#u-error', `Ya existe ${usuario}.`);
+  if (contra.length < MIN_CONTRA) return mostrarError('#u-error', `La contraseña necesita al menos ${MIN_CONTRA} caracteres.`);
+
+  await ocupado(e.submitter || $('#form-usuario button'), 'Agregando…', async () => {
+    try {
+      const nuevo = await nuevoUsuario(contra, sesion.token, $('#u-admin').checked);
+      await cambiarAcceso(async datos => {
+        if (datos.usuarios[usuario]) throw Object.assign(new Error(), { status: 422 });
+        datos.usuarios[usuario] = nuevo;
+      }, `Agregar usuario ${usuario} (${sesion.usuario})`);
+      $('#u-usuario').value = '';
+      $('#u-contra').value = '';
+      $('#u-admin').checked = false;
+      toast(`${usuario} agregado. En 2 minutos ya puede entrar.`, 3500);
+    } catch (err) {
+      mostrarError('#u-error', mensajeGitHub(err));
+    }
+  });
+});
+
+/* Diálogo: cambiar token o quitar a alguien (los dos necesitan token nuevo) */
+let dialogoQuitar = null;
+function abrirDialogo(quitar) {
+  dialogoQuitar = quitar;
+  $('#d-titulo').textContent = quitar ? `Quitar a ${quitar}` : 'Cambiar token de GitHub';
+  $('#d-texto').innerHTML = (quitar
+    ? `<p class="texto-suave">${escapar(quitar)} pudo ver el token actual. Para que ya no pueda entrar:</p>`
+    : `<p class="texto-suave">Úsalo cuando el token venza o si crees que alguien más lo tiene.</p>`)
+    + `<ol>
+        <li>Crea un token nuevo en <a href="${LINK_TOKEN}" target="_blank" rel="noopener">GitHub</a> (mismos permisos).</li>
+        <li>Pégalo aquí abajo.</li>
+        <li>Después, borra el token viejo en GitHub.</li>
+      </ol>`;
+  $('#d-ok').textContent = quitar ? 'Quitar y cambiar token' : 'Cambiar token';
+  $('#d-token').value = '';
+  mostrarError('#d-error', '');
+  $('#dialogo').showModal();
+}
+$('#btn-renovar').addEventListener('click', () => abrirDialogo(null));
+$('#lista-usuarios').addEventListener('click', e => {
+  const b = e.target.closest('[data-quitar]');
+  if (b) abrirDialogo(b.dataset.quitar);
+});
+$('#d-cancelar').addEventListener('click', () => $('#dialogo').close());
+
+$('#form-dialogo').addEventListener('submit', async e => {
+  e.preventDefault();
+  const nuevo = $('#d-token').value.trim();
+  const err = tokenValido(nuevo);
+  if (err) return mostrarError('#d-error', err);
+  if (nuevo === sesion.token) return mostrarError('#d-error', 'Ese es el mismo token. Crea uno nuevo en GitHub.');
+
+  await ocupado($('#d-ok'), 'Guardando…', async () => {
+    try {
+      const quitar = dialogoQuitar;
+      await cambiarAcceso(async datos => {
+        if (quitar) delete datos.usuarios[quitar];
+        for (const u of Object.keys(datos.usuarios)) {
+          datos.usuarios[u].token = await cifrarToken(datos.usuarios[u].publica, nuevo);
+        }
+      }, quitar ? `Quitar usuario ${quitar} y cambiar token (${sesion.usuario})` : `Cambiar token (${sesion.usuario})`, nuevo);
+      sesion.token = nuevo;
+      guardarSesion();
+      $('#dialogo').close();
+      toast(quitar ? `${quitar} ya no tiene acceso. Ahora borra el token viejo en GitHub.` : 'Token cambiado. Ahora borra el viejo en GitHub.', 5000);
+    } catch (er) {
+      mostrarError('#d-error', er.status === 401 ? 'Ese token no es válido.' : mensajeGitHub(er));
+    }
+  });
+});
+
+/* ---------- Mi contraseña ---------- */
+$('#form-contra').addEventListener('submit', async e => {
+  e.preventDefault();
+  const actual = $('#m-actual').value, nueva = $('#m-nueva').value;
+  mostrarError('#m-error', '');
+  if (nueva.length < MIN_CONTRA) return mostrarError('#m-error', `La contraseña nueva necesita al menos ${MIN_CONTRA} caracteres.`);
+  if (nueva !== $('#m-nueva2').value) return mostrarError('#m-error', 'Las contraseñas nuevas no coinciden.');
+
+  await ocupado(e.submitter || $('#form-contra button'), 'Cambiando…', async () => {
+    let pkcs8;
+    try { pkcs8 = (await abrirPrivada(acceso.usuarios[sesion.usuario], actual)).pkcs8; }
+    catch (_) { return mostrarError('#m-error', 'La contraseña actual no es correcta.'); }
+    try {
+      const cerrada = await cerrarPrivada(pkcs8, nueva);
+      await cambiarAcceso(async datos => {
+        Object.assign(datos.usuarios[sesion.usuario], cerrada);
+      }, `Cambiar contraseña (${sesion.usuario})`);
+      e.target.reset();
+      toast('Contraseña cambiada');
+    } catch (er) {
+      mostrarError('#m-error', mensajeGitHub(er));
+    }
+  });
+});
+
+/* ---------- Abrir panel ---------- */
+async function abrirPanel() {
+  // acceso.json más reciente (directo de GitHub)
+  const a = await leerArchivo('acceso.json');
+  if (a.texto) acceso = JSON.parse(a.texto);
+  const yo = acceso && acceso.usuarios[sesion.usuario];
+  if (!yo) return salir('Tu usuario ya no tiene acceso.');
+  sesion.admin = !!yo.admin;
+  guardarSesion();
+
+  const t = await leerArchivo('tarjetas.json');
+  publicado = t.texto ? comoTexto(JSON.parse(t.texto)) : comoTexto({});
+
+  const borrador = leer(GUARDADO.borrador, null);
+  if (borrador && comoTexto(borrador) !== publicado) tarjetas = borrador;
+  else { tarjetas = JSON.parse(publicado); guardar(GUARDADO.borrador, null); }
+
+  $('#pantalla-acceso').hidden = true;
+  $('#app').hidden = false;
+  pintarUsuarios();
+  pintarColores();
+  $('#f-base').value = base();
+  limpiarFormulario();
+  pintar();
+}
+
 /* ---------- Inicio ---------- */
 async function iniciar() {
   if (A.negocio) {
@@ -813,32 +1263,38 @@ async function iniciar() {
     p.innerHTML = `Ver cuántas veces escanean cada tarjeta: <a href="https://${escapar(A.goatcounter)}.goatcounter.com" target="_blank" rel="noopener">${escapar(A.goatcounter)}.goatcounter.com</a>`;
     p.hidden = false;
   }
-  pintarColores();
-
-  pintarConexion();
-  publicado = null;
-  if (conexion()) {
-    try { publicado = (await leerDeGitHub()).texto; }
-    catch (e) { toast(mensajeGitHub(e), 5000); }
+  if (!window.crypto || !crypto.subtle) {
+    $('#acceso-cargando').textContent = 'Este navegador no puede abrir el panel. Usa Chrome o Safari actualizados.';
+    return;
   }
-  if (publicado === null) {
-    try {
-      const r = await fetch(`../tarjetas.json?v=${Date.now()}`, { cache: 'no-store' });
-      if (!r.ok) throw new Error();
-      publicado = comoTexto(await r.json());
-    } catch (_) {
-      $('#nota-sin-lista').hidden = false;
+
+  // ¿Ya hay sesión abierta?
+  sesion = leerSesion();
+  if (sesion) {
+    try { return await abrirPanel(); }
+    catch (e) {
+      const motivo = e.status === 401 ? 'El acceso cambió. Entra de nuevo.' : mensajeGitHub(e);
+      guardar(GUARDADO.sesion, null, sessionStorage);
+      guardar(GUARDADO.sesion, null);
+      sesion = null;
+      await cargarAccesoPublico();
+      return mostrarEntrar(motivo);
     }
   }
-
-  const borrador = leer(GUARDADO.borrador, null);
-  if (borrador && comoTexto(borrador) !== publicado) tarjetas = borrador;
-  else {
-    tarjetas = publicado ? JSON.parse(publicado) : {};
-    guardar(GUARDADO.borrador, null);
+  if (await cargarAccesoPublico()) mostrarEntrar();
+}
+async function cargarAccesoPublico() {
+  try {
+    const r = await fetch(`../acceso.json?v=${Date.now()}`, { cache: 'no-store' });
+    if (r.status === 404) { mostrarCrear(); return false; }
+    if (!r.ok) throw new Error();
+    acceso = await r.json();
+    if (!acceso.usuarios || !Object.keys(acceso.usuarios).length) { mostrarCrear(); return false; }
+    return true;
+  } catch (_) {
+    mostrarEntrar('No se pudo cargar el acceso. Revisa tu internet y recarga.');
+    return false;
   }
-  limpiarFormulario();
-  pintar();
 }
 iniciar();
 </script>
