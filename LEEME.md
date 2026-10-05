@@ -10,13 +10,19 @@ Qué hace cada archivo:
 | `panel/index.html` | Tu panel para agregar tarjetas y bajar los QR | No |
 | `panel/qrcode.js` | Librería que dibuja los QR (licencia MIT, Kazuhiko Arase) | No |
 
+## Seguridad
+
+- Solo quien entre a tu cuenta de GitHub puede cambiar a dónde llevan las tarjetas. Ten activada la verificación en dos pasos (2FA).
+- El token del panel se guarda solo en tu navegador. Nunca lo pegues en `ajustes.js` ni en ningún archivo del repositorio.
+- Si pierdes tu celular o compu: GitHub → Settings → Developer settings → Fine-grained tokens → borra el token.
+
 ## Para cambiar o agregar tarjetas
 
 1. Abre tu panel: `https://lilghost99.github.io/tarjetas/panel/`
 2. Agrega, edita o pausa tarjetas.
-3. Da clic en **Descargar tarjetas.json**.
-4. En GitHub: **Add file → Upload files**, arrastra el archivo y da **Commit changes**.
-5. Espera 1 o 2 minutos.
+3. Da clic en **Publicar ahora** (si conectaste GitHub en el panel).
+   Si no lo conectaste: **Descargar tarjetas.json** → en GitHub **Add file → Upload files** → **Commit changes**.
+4. Espera 1 o 2 minutos.
 
 ## Para grabar una tarjeta NFC
 
