@@ -8,7 +8,7 @@ window.AJUSTES = {
 
   // Tu WhatsApp con lada de país (52), sin espacios ni signos.
   // Ejemplo: "527711234567"
-  whatsapp: "",
+  whatsapp: "527711948929",
 
   // (Opcional) Tu código de GoatCounter para contar escaneos.
   // Si tu panel es lilghost.goatcounter.com, aquí va "lilghost"
