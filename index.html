@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>LilGhost Studio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path fill='%235B3DF5' d='M32 6C19.8 6 12 15 12 27v29l6.7-5 6.6 5 6.7-5 6.7 5 6.6-5L52 56V27C52 15 44.2 6 32 6Z'/></svg>">
+<script>
+  // Si la dirección trae ?id=..., es alguien escaneando una tarjeta
+  if (new URLSearchParams(location.search).get('id')) document.documentElement.classList.add('modo-tarjeta');
+</script>
+<script src="ajustes.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --niebla: #EEF0F7;
+    --tinta: #1C1A33;
+    --suave: #6B6985;
+    --brillo: #5B3DF5;
+    --brillo-tenue: rgba(91, 61, 245, .16);
+    --sobre-brillo: #FFFFFF;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --niebla: #15132A;
+      --tinta: #ECEBF7;
+      --suave: #A3A1BF;
+      --brillo: #9B87FF;
+      --brillo-tenue: rgba(155, 135, 255, .18);
+      --sobre-brillo: #15132A;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body {
+    background: var(--niebla);
+    color: var(--tinta);
+    font: 400 17px/1.55 "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: env(safe-area-inset-top, 0px) 24px env(safe-area-inset-bottom, 0px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  main { max-width: 30rem; padding: 48px 0; }
+
+  /* El fantasma con ondas de "toque" NFC */
+  .marca { position: relative; width: 112px; height: 112px; margin: 0 auto 32px; }
+  .marca svg { position: relative; width: 100%; height: 100%; color: var(--brillo); z-index: 1; }
+  .onda {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--brillo); opacity: 0;
+    animation: onda 2.4s ease-out infinite;
+  }
+  .onda:nth-child(2) { animation-delay: 1.2s; }
+  @keyframes onda {
+    0% { transform: scale(.7); opacity: .55; }
+    100% { transform: scale(1.9); opacity: 0; }
+  }
+  .flota { animation: flota 3s ease-in-out infinite; }
+  @keyframes flota { 50% { transform: translateY(-6px); } }
+
+  h1 { font-size: clamp(2.2rem, 7vw, 3rem); line-height: 1.05; font-weight: 700; letter-spacing: -.03em; }
+  p { color: var(--suave); margin-top: 14px; }
+  .boton {
+    display: inline-block; margin-top: 28px;
+    background: var(--brillo); color: var(--sobre-brillo); text-decoration: none;
+    font: inherit; font-weight: 500; padding: 14px 26px; border-radius: 999px; border: 0;
+    cursor: pointer;
+  }
+  .boton:focus-visible { outline: 3px solid var(--brillo-tenue); outline-offset: 3px; }
+  .pie { margin-top: 48px; font-size: 14px; }
+
+  /* Vistas: inicio (sin id) y tarjeta (con id) */
+  .vista-tarjeta { display: none; }
+  .modo-tarjeta .vista-inicio { display: none; }
+  .modo-tarjeta .vista-tarjeta { display: block; }
+  .estado { display: none; }
+  .estado.visible { display: block; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .onda, .flota { animation: none; }
+    .onda { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Fantasma reutilizable -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="fantasma" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M32 6C19.8 6 12 15 12 27v29l6.7-5 6.6 5 6.7-5 6.7 5 6.6-5L52 56V27C52 15 44.2 6 32 6Z"/>
+    <circle cx="25" cy="28" r="3.4" fill="var(--niebla)"/>
+    <circle cx="39" cy="28" r="3.4" fill="var(--niebla)"/>
+  </symbol>
+</svg>
+
+<!-- ===== INICIO (cuando alguien entra sin tarjeta) ===== -->
+<main class="vista-inicio">
+  <div class="marca">
+    <span class="onda"></span><span class="onda"></span>
+    <svg class="flota" aria-hidden="true"><use href="#fantasma"/></svg>
+  </div>
+  <h1 data-negocio>LilGhost Studio</h1>
+  <p>Tarjetas NFC y QR para negocios. Tus clientes acercan el celular y llegan directo a tus reseñas, tus redes o tu WhatsApp.</p>
+  <a class="boton" data-whatsapp hidden target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+  <p class="pie">Pachuca, Hidalgo</p>
+</main>
+
+<!-- ===== TARJETA (cuando alguien escanea) ===== -->
+<main class="vista-tarjeta" aria-live="polite">
+  <div class="marca">
+    <span class="onda"></span><span class="onda"></span>
+    <svg class="flota" aria-hidden="true"><use href="#fantasma"/></svg>
+  </div>
+
+  <div class="estado visible" id="abriendo">
+    <h1>Abriendo…</h1>
+    <p id="abriendo-detalle">Un segundo.</p>
+  </div>
+
+  <div class="estado" id="inactiva">
+    <h1>Esta tarjeta aún no está activa</h1>
+    <p>Si es tuya, escríbenos y la activamos en minutos.</p>
+    <a class="boton" data-whatsapp hidden target="_blank" rel="noopener">Activar por WhatsApp</a>
+  </div>
+
+  <div class="estado" id="error">
+    <h1>No se pudo abrir el enlace</h1>
+    <p>Revisa tu conexión a internet y vuelve a intentarlo.</p>
+    <button class="boton" type="button" onclick="location.reload()">Intentar de nuevo</button>
+  </div>
+</main>
+
+<script>
+  const A = window.AJUSTES || {};
+  const id = (new URLSearchParams(location.search).get('id') || '').trim().toUpperCase();
+
+  // Nombre y WhatsApp desde ajustes.js
+  if (A.negocio) {
+    document.title = A.negocio;
+    document.querySelectorAll('[data-negocio]').forEach(el => el.textContent = A.negocio);
+  }
+  if (A.whatsapp) {
+    const texto = id ? `Hola, quiero activar mi tarjeta ${id}` : 'Hola, me interesan las tarjetas NFC';
+    document.querySelectorAll('[data-whatsapp]').forEach(el => {
+      el.href = `https://wa.me/${A.whatsapp}?text=${encodeURIComponent(texto)}`;
+      el.hidden = false;
+    });
+  }
+
+  function mostrar(estado) {
+    document.querySelectorAll('.estado').forEach(el => el.classList.toggle('visible', el.id === estado));
+  }
+
+  // Cuenta el escaneo en GoatCounter (solo si lo activaste en ajustes.js)
+  function contarEscaneo(id) {
+    return new Promise(listo => {
+      if (!A.goatcounter) return listo();
+      const url = `https://${A.goatcounter}.goatcounter.com/count`
+        + `?p=${encodeURIComponent('/tarjeta/' + id)}`
+        + `&t=${encodeURIComponent('Tarjeta ' + id)}`
+        + `&rnd=${Math.random().toString(36).slice(2)}`;
+      let enviado = false;
+      try { enviado = navigator.sendBeacon(url); } catch (e) {}
+      if (enviado) return setTimeout(listo, 80);
+      const img = new Image();
+      img.onload = img.onerror = listo;
+      img.src = url;
+      setTimeout(listo, 700);
+    });
+  }
+
+  async function abrirTarjeta() {
+    try {
+      const r = await fetch(`tarjetas.json?v=${Date.now()}`, { cache: 'no-store' });
+      if (!r.ok) throw new Error('sin lista');
+      const lista = await r.json();
+      const t = lista[id];
+      const link = t && (typeof t === 'string' ? t : t.link);
+      const activa = t && (typeof t === 'string' || t.activa !== false);
+
+      if (!link || !activa || !/^https?:\/\//i.test(link)) return mostrar('inactiva');
+
+      if (t.cliente) document.getElementById('abriendo-detalle').textContent = t.cliente;
+      await contarEscaneo(id);
+      location.replace(link);
+    } catch (e) {
+      mostrar('error');
+    }
+  }
+
+  if (id) abrirTarjeta();
+</script>
+</body>
+</html>
