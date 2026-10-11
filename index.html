@@ -2,242 +2,226 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Traffic Barber · TB Barber shop | Pachuca</title>
-<meta name="description" content="Traffic Barber, studio de barbería en Real de Toledo, Pachuca. 4.9 estrellas en Google. Agenda tu cita en línea.">
-<meta name="theme-color" content="#050505">
-<link rel="icon" href="icono-192.png?v=3">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://*.goatcounter.com; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>LilGhost Studio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path fill='%235B3DF5' d='M32 6C19.8 6 12 15 12 27v29l6.7-5 6.6 5 6.7-5 6.7 5 6.6-5L52 56V27C52 15 44.2 6 32 6Z'/></svg>">
+<script>
+  // Si la dirección trae ?id=..., es alguien escaneando una tarjeta
+  if (new URLSearchParams(location.search).get('id')) document.documentElement.classList.add('modo-tarjeta');
+</script>
+<script src="ajustes.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,800;1,800;1,900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="sitio.css">
-<script src="animaciones.js" defer></script>
-<script type="module" src="sitio.js"></script>
-<script type="module" src="datos.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --niebla: #EEF0F7;
+    --tinta: #1C1A33;
+    --suave: #6B6985;
+    --brillo: #5B3DF5;
+    --brillo-tenue: rgba(91, 61, 245, .16);
+    --sobre-brillo: #FFFFFF;
+    --aura-1: #7A5CFF; --aura-2: #3FB8E6; --aura-3: #FF74B8;
+    --vidrio: rgba(255, 255, 255, .44);
+    --reflejo: rgba(255, 255, 255, .95);
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --niebla: #15132A;
+      --tinta: #ECEBF7;
+      --suave: #A3A1BF;
+      --brillo: #9B87FF;
+      --brillo-tenue: rgba(155, 135, 255, .18);
+      --sobre-brillo: #15132A;
+      --niebla: #0E0C1F;
+      --aura-1: #5B3DF5; --aura-2: #1C7FA8; --aura-3: #A0307A;
+      --vidrio: rgba(28, 25, 58, .48);
+      --reflejo: rgba(255, 255, 255, .35);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  [hidden] { display: none !important; }
+  html { height: 100%; background: var(--niebla); }
+  body { min-height: 100%; }
+  body {
+    color: var(--tinta);
+    font: 400 17px/1.55 "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: env(safe-area-inset-top, 0px) 24px env(safe-area-inset-bottom, 0px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  main {
+    position: relative; max-width: 28rem; padding: 44px 32px 40px; border-radius: 32px;
+    background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 38%), var(--vidrio);
+    -webkit-backdrop-filter: blur(26px) saturate(175%); backdrop-filter: blur(26px) saturate(175%);
+    box-shadow: inset 0 1px 1px var(--reflejo), 0 18px 50px -18px rgba(44, 22, 140, .35);
+  }
+  main::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(150deg, var(--reflejo), rgba(255,255,255,.08) 32%, rgba(255,255,255,0) 62%, rgba(255,255,255,.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  }
+  .aura { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .aura span { position: absolute; width: 58vmax; height: 58vmax; border-radius: 50%; filter: blur(80px); opacity: .55; animation: deriva 40s ease-in-out infinite alternate; }
+  .aura span:nth-child(1) { background: var(--aura-1); top: -20vmax; left: -14vmax; }
+  .aura span:nth-child(2) { background: var(--aura-2); bottom: -26vmax; right: -16vmax; animation-duration: 48s; animation-delay: -14s; }
+  .aura span:nth-child(3) { background: var(--aura-3); top: 28%; left: 42%; width: 36vmax; height: 36vmax; opacity: .38; animation-duration: 56s; animation-delay: -22s; }
+  @keyframes deriva { to { transform: translate(9vmax, 7vmax) scale(1.14); } }
+
+  /* El fantasma con ondas de "toque" NFC */
+  .marca { position: relative; width: 112px; height: 112px; margin: 0 auto 32px; }
+  .marca svg { position: relative; width: 100%; height: 100%; color: var(--brillo); z-index: 1; }
+  .onda {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--brillo); opacity: 0;
+    animation: onda 2.4s ease-out infinite;
+  }
+  .onda:nth-child(2) { animation-delay: 1.2s; }
+  @keyframes onda {
+    0% { transform: scale(.7); opacity: .55; }
+    100% { transform: scale(1.9); opacity: 0; }
+  }
+  .flota { animation: flota 3s ease-in-out infinite; }
+  @keyframes flota { 50% { transform: translateY(-6px); } }
+
+  h1 { font-size: clamp(2.2rem, 7vw, 3rem); line-height: 1.05; font-weight: 700; letter-spacing: -.03em; }
+  p { color: var(--suave); margin-top: 14px; }
+  .boton {
+    display: inline-block; margin-top: 28px;
+    background: var(--brillo); color: var(--sobre-brillo); text-decoration: none;
+    font: inherit; font-weight: 500; padding: 14px 26px; border-radius: 999px; border: 0;
+    cursor: pointer;
+  }
+  .boton:focus-visible { outline: 3px solid var(--brillo-tenue); outline-offset: 3px; }
+  .pie { margin-top: 36px; font-size: 14px; }
+
+  /* Vistas: inicio (sin id) y tarjeta (con id) */
+  .vista-tarjeta { display: none; }
+  .modo-tarjeta .vista-inicio { display: none; }
+  .modo-tarjeta .vista-tarjeta { display: block; }
+  .estado { display: none; }
+  .estado.visible { display: block; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .onda, .flota { animation: none; }
+    .onda { display: none; }
+    .aura span { animation: none; }
+  }
+</style>
 </head>
 <body>
+<div class="aura" aria-hidden="true"><span></span><span></span><span></span></div>
 
+<!-- Fantasma reutilizable -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <g id="razor">
-      <rect x="-92" y="-7" width="82" height="14" rx="7" fill="none" stroke="currentColor" stroke-width="3"/>
-      <path d="M-10,-10 L70,-13 Q86,-12 86,0 L86,4 Q86,9 78,9 L-10,9 Z" fill="currentColor"/>
-      <circle cx="-10" cy="0" r="4" fill="#0C0C0C"/>
-    </g>
-    <symbol id="razors" viewBox="0 0 200 120">
-      <use href="#razor" transform="translate(100,66) rotate(-32)"/>
-      <use href="#razor" transform="translate(100,66) scale(-1,1) rotate(-32)"/>
-    </symbol>
-  </defs>
+  <symbol id="fantasma" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M32 6C19.8 6 12 15 12 27v29l6.7-5 6.6 5 6.7-5 6.7 5 6.6-5L52 56V27C52 15 44.2 6 32 6Z"/>
+    <circle cx="25" cy="28" r="3.4" fill="#fff"/>
+    <circle cx="39" cy="28" r="3.4" fill="#fff"/>
+  </symbol>
 </svg>
 
-<header>
-  <div class="wrap nav">
-    <a class="brand" href="index.html" aria-label="Traffic Barber, inicio">
-      <img class="brand-logo" src="logo.png" alt="Traffic Barber" width="900" height="377">
-    </a>
-    <nav class="links" aria-label="Principal">
-      <a href="index.html" aria-current="page">Inicio</a>
-      <a href="servicios.html">Servicios</a>
-      <a href="galeria.html">Galería</a>
-      <a href="visitanos.html">Visítanos</a>
-    </nav>
-    <a class="btn btn-primary btn-agenda" href="agendar.html">Agenda tu cita</a>
+<!-- ===== INICIO (cuando alguien entra sin tarjeta) ===== -->
+<main class="vista-inicio">
+  <div class="marca">
+    <span class="onda"></span><span class="onda"></span>
+    <svg class="flota" aria-hidden="true"><use href="#fantasma"/></svg>
   </div>
-  <div class="pole" aria-hidden="true"></div>
-</header>
-
-<main>
-  <section class="wrap hero">
-    <div class="hero-text">
-      <div class="pill fx d1">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#A5F20A" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5-4.9-4.6 6.6-.8z"/></svg>
-        4.9 en Google · 156 reseñas
-      </div>
-      <h1 class="display fx d2">Tu estilo<span class="script">empieza aquí</span></h1>
-      <p class="fx d3">No solo cortamos el cabello: diseñamos identidad. Old school y new school con lujo urbano, en Real de Toledo, Pachuca.</p>
-      <div class="actions fx d4">
-        <a class="btn btn-primary" href="agendar.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Agenda tu cita</a>
-        <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=TB%20Barber%20shop%20Real%20de%20Toledo%20Pachuca&amp;query_place_id=ChIJnW-ZsGyh0YURKsS65CJwEzI" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Cómo llegar</a>
-      </div>
-      <p class="sin-cita fx d5">¿Sin cita? Llega directo, también te atendemos.</p>
-    </div>
-    <div class="hero-logo fx d2">
-      <img class="hero-marca" src="logo.png" alt="Traffic Barber" width="900" height="377">
-    </div>
-  </section>
-
-  <section id="recompensas" class="wrap reveal" style="padding-top:8px">
-    <div class="reward">
-      <div class="reward-text">
-        <div class="tag-oro">Tarjeta de recompensas</div>
-        <h2 class="display">Cada corte <span class="script">cuenta</span></h2>
-        <p>Junta sellos en tu celular cada vez que vengas, con o sin cita. Es gratis y te registras en 30 segundos.</p>
-        <ul class="reward-list">
-          <li><b>5° visita</b> <span data-premio="mitad">facial gratis</span></li>
-          <li><b>10° visita</b> <span data-premio="final">50% de descuento en corte</span></li>
-          <li><b>Cumpleaños</b> <span data-premio="cumple">regalo especial todo el mes</span></li>
-        </ul>
-        <div class="actions" style="margin-top:24px">
-          <a class="btn btn-primary" href="tarjeta.html">Saca tu tarjeta gratis</a>
-          <a class="btn btn-ghost" href="tarjeta.html">Ya tengo tarjeta</a>
-        </div>
-      </div>
-      <div class="reward-card" aria-hidden="true">
-        <div class="rc-cab">
-          <div><b>Tu nombre</b><small>Cliente frecuente</small></div>
-          <img class="rc-logo" src="logo.png" alt="" width="900" height="377">
-        </div>
-        <div class="rc-sellos"><span class="rc-s on">✓</span><span class="rc-s on">✓</span><span class="rc-s on">✓</span><span class="rc-s">4</span><span class="rc-s premio" data-premio-corto="mitad">FACIAL
-GRATIS</span><span class="rc-s">6</span><span class="rc-s">7</span><span class="rc-s">8</span><span class="rc-s">9</span><span class="rc-s premio" data-premio-corto="final">50%
-DESC.</span></div>
-        <div class="rc-pie">Te faltan <b>2 sellos</b> para tu <b data-premio="mitad">facial gratis</b></div>
-      </div>
-    </div>
-  </section>
-
-  <div style="height:48px"></div>
-  <section class="ventajas reveal" aria-label="Lo que incluye tu visita">
-    <div class="wrap">
-      <div class="v-grid">
-        <button class="v-btn" type="button" id="b-bebidas" aria-expanded="false" aria-controls="p-bebidas">
-          <svg class="v-ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A5F20A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3v3M12 3v3"/></svg>
-          <span class="v-t"><b>Café, té y cerveza</b><span>De cortesía con cita</span></span>
-          <svg class="v-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <button class="v-btn" type="button" id="b-wifi" aria-expanded="false" aria-controls="p-wifi">
-          <svg class="v-ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A5F20A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5.5 12a10 10 0 0 1 13 0"/><path d="M9 15.5a5 5 0 0 1 6 0"/><circle cx="12" cy="19" r="1" fill="#A5F20A"/></svg>
-          <span class="v-t"><b>WiFi gratis</b><span>Conéctate en segundos</span></span>
-          <svg class="v-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <button class="v-btn" type="button" id="b-pago" aria-expanded="false" aria-controls="p-pago">
-          <svg class="v-ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A5F20A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
-          <span class="v-t"><b>Transferencia o efectivo</b><span>Copia los datos aquí</span></span>
-          <svg class="v-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <button class="v-btn" type="button" id="b-horario" aria-expanded="false" aria-controls="p-horario">
-          <svg class="v-ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A5F20A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          <span class="v-t"><b>Horario</b><span id="estadoCorto">Lun a sáb · 11:30 a 22:00</span></span>
-          <svg class="v-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-      </div>
-
-      <div class="v-panel" id="p-bebidas" role="region" aria-labelledby="b-bebidas" inert><div><div class="v-in">
-        <h3>Bebida de cortesía</h3>
-        <p>Cuando vienes <b>con cita</b> te ofrecemos <b>café, té o una cerveza</b> mientras te atendemos. Sin cita tienes agua y WiFi.</p>
-        <p class="nota">Cerveza solo para mayores de edad.</p>
-        <div class="actions" style="margin-top:16px"><a class="btn btn-primary" href="agendar.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Agenda tu cita</a></div>
-      </div></div></div>
-
-      <div class="v-panel" id="p-wifi" role="region" aria-labelledby="b-wifi" inert><div><div class="v-in">
-        <h3>Conéctate sin escribir contraseña</h3>
-        <ol class="pasos">
-          <li>Busca el exhibidor de <b>WiFi</b> en el mostrador de la barbería.</li>
-          <li>Abre la <b>cámara</b> de tu celular y apunta al código QR. En Android también puedes <b>acercar tu celular</b> al exhibidor.</li>
-          <li>Toca <b>“Conectarse”</b> en el aviso que aparece y listo.</li>
-        </ol>
-      </div></div></div>
-
-      <div class="v-panel" id="p-pago" role="region" aria-labelledby="b-pago" inert><div><div class="v-in">
-        <h3>Datos para transferencia</h3>
-        <div class="dato"><div><span>Banco</span><b data-pago="banco">—</b></div></div>
-        <div class="dato"><div><span>A nombre de</span><b data-pago="titular">—</b></div></div>
-        <div class="dato grande"><div><span>Número de tarjeta</span><b data-pago="tarjeta">—</b></div>
-          <button class="btn btn-primary btn-sm" type="button" data-copiar="tarjeta"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg> <span>Copiar</span></button></div>
-        <div class="dato grande" data-si="clabe"><div><span>CLABE</span><b data-pago="clabe">—</b></div>
-          <button class="btn btn-ghost btn-sm" type="button" data-copiar="clabe"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg> <span>Copiar</span></button></div>
-        <p class="nota">Enséñale tu comprobante al barbero al pagar. También aceptamos efectivo.</p>
-      </div></div></div>
-
-      <div class="v-panel" id="p-horario" role="region" aria-labelledby="b-horario" inert><div><div class="v-in">
-        <div class="estado" id="estadoLargo">Lunes a sábado · 11:30 a 22:00</div>
-        <table class="horario" id="tablaHorario"><caption class="sr">Horario de la semana</caption><tbody></tbody></table>
-        <div class="actions" style="margin-top:16px">
-          <a class="btn btn-primary" href="agendar.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Agenda tu cita</a>
-          <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=TB%20Barber%20shop%20Real%20de%20Toledo%20Pachuca&amp;query_place_id=ChIJnW-ZsGyh0YURKsS65CJwEzI" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Cómo llegar</a>
-        </div>
-      </div></div></div>
-    </div>
-  </section>
-
-  <section id="barberos" class="wrap block reveal">
-    <div class="sec-head">
-      <h2 class="display">Quién te <span class="script">corta</span></h2>
-      <p>Conoce al equipo y síguelo en redes</p>
-    </div>
-    <div class="barber-grid" id="listaBarberos"></div>
-  </section>
-
-  <section id="cortes" class="wrap block reveal">
-    <div class="sec-head">
-      <h2 class="display">Nuestros <span class="script">cortes</span></h2>
-      <a class="mas" href="galeria.html">Ver galería completa →</a>
-    </div>
-    <div class="gallery gallery-inicio stagger">
-      <figure class="shot foto"><button type="button" class="zoom" aria-label="Ver grande: Diseño tribal en la nuca con fade"><img src="corte1.jpg" alt="Diseño tribal en la nuca con fade" width="900" height="1200" loading="lazy" decoding="async"></button></figure>
-      <figure class="shot foto"><button type="button" class="zoom" aria-label="Ver grande: Fade con raya marcada y peinado hacia atrás"><img src="corte5.jpg" alt="Fade con raya marcada y peinado hacia atrás" width="900" height="1200" loading="lazy" decoding="async"></button></figure>
-      <figure class="shot foto"><button type="button" class="zoom" aria-label="Ver grande: Diseño de líneas con mechas claras"><img src="corte2.jpg" alt="Diseño de líneas con mechas claras" width="900" height="1200" loading="lazy" decoding="async"></button></figure>
-      <figure class="shot foto"><button type="button" class="zoom" aria-label="Ver grande: Corte militar con fade alto"><img src="corte6.jpg" alt="Corte militar con fade alto" width="900" height="1200" loading="lazy" decoding="async"></button></figure>
-    </div>
-  </section>
-
-  <section id="resenas" class="wrap block reveal">
-    <div class="reviews">
-      <div class="rating">
-        <div class="num" data-contar="4.9" data-dec="1">4.9</div>
-        <div class="stars" role="img" aria-label="5 de 5 estrellas"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5-4.9-4.6 6.6-.8z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5-4.9-4.6 6.6-.8z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5-4.9-4.6 6.6-.8z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5-4.9-4.6 6.6-.8z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5-4.9-4.6 6.6-.8z"/></svg></div>
-        <span><b data-contar="156">156</b> reseñas en Google</span>
-      </div>
-      <div class="reviews-body">
-        <h2 class="display">Lo que dicen <span class="script">nuestros clientes</span></h2>
-        <div id="listaResenas">
-          <p class="muted" style="margin:14px 0 0">Lo que más mencionan en sus reseñas de Google:</p>
-          <ul class="chips stagger">
-            <li>Cortes profesionales</li><li>Atención rápida y amable</li><li>Buen ambiente</li><li>Café y té mientras esperas</li><li>Buen precio</li>
-          </ul>
-        </div>
-        <div class="actions">
-          <a class="btn btn-primary" href="https://search.google.com/local/writereview?placeid=ChIJnW-ZsGyh0YURKsS65CJwEzI" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5-4.9-4.6 6.6-.8z"/></svg> Deja tu reseña</a>
-          <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=TB%20Barber%20shop%20Real%20de%20Toledo%20Pachuca&amp;query_place_id=ChIJnW-ZsGyh0YURKsS65CJwEzI" target="_blank" rel="noopener">Leer todas en Google <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="promosDestacadas" class="wrap block reveal" style="padding-top:56px">
-    <div class="sec-head">
-      <h2 class="display">Promos <span class="script">de la semana</span></h2>
-      <a class="mas" href="servicios.html#promociones">Ver precios y promos →</a>
-    </div>
-    <div class="grid-3 stagger" id="promosInicio"></div>
-  </section>
-
-  <section class="wrap reveal" aria-label="Facebook">
-    <div class="fb-band">
-      <div>
-        <div class="display">Lo más nuevo <span class="script">está en Facebook</span></div>
-        <p>Cortes, promos del día y lugares disponibles. Síguenos para no perderte nada.</p>
-      </div>
-      <a class="btn btn-primary" href="https://www.facebook.com/profile.php?id=61577432973040" target="_blank" rel="noopener">Seguir en Facebook <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-    </div>
-  </section>
-  <div style="height:56px"></div>
+  <h1 data-negocio>LilGhost Studio</h1>
+  <p>Tarjetas NFC y QR para negocios. Tus clientes acercan el celular y llegan directo a tus reseñas, tus redes o tu WhatsApp.</p>
+  <a class="boton" data-whatsapp hidden target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+  <p class="pie">Pachuca, Hidalgo</p>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div><img class="foot-logo" src="logo.png" alt="Traffic Barber" width="900" height="377"><span>TB Barber shop · Real de Toledo</span></div>
-      <div class="foot-links"><a href="https://www.facebook.com/profile.php?id=61577432973040" target="_blank" rel="noopener">Facebook</a> · <a href="https://wa.me/525573794461" target="_blank" rel="noopener">WhatsApp</a> · <a href="tarjeta.html">Mi tarjeta</a> · <a href="privacidad.html">Aviso de privacidad</a></div>
-      <div>Sitio hecho por <a class="lilghost" href="https://lilghost99.github.io/Studio/" target="_blank" rel="noopener">LilGhost Studio</a></div>
-    </div>
+<!-- ===== TARJETA (cuando alguien escanea) ===== -->
+<main class="vista-tarjeta" aria-live="polite">
+  <div class="marca">
+    <span class="onda"></span><span class="onda"></span>
+    <svg class="flota" aria-hidden="true"><use href="#fantasma"/></svg>
   </div>
-</footer>
 
-<a class="float" href="https://wa.me/525573794461?text=Hola%2C%20tengo%20una%20pregunta" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
-</a>
+  <div class="estado visible" id="abriendo">
+    <h1>Abriendo…</h1>
+    <p id="abriendo-detalle">Un segundo.</p>
+  </div>
 
+  <div class="estado" id="inactiva">
+    <h1>Esta tarjeta aún no está activa</h1>
+    <p>Si es tuya, escríbenos y la activamos en minutos.</p>
+    <a class="boton" data-whatsapp hidden target="_blank" rel="noopener">Activar por WhatsApp</a>
+  </div>
+
+  <div class="estado" id="error">
+    <h1>No se pudo abrir el enlace</h1>
+    <p>Revisa tu conexión a internet y vuelve a intentarlo.</p>
+    <button class="boton" type="button" onclick="location.reload()">Intentar de nuevo</button>
+  </div>
+</main>
+
+<script>
+  const A = window.AJUSTES || {};
+  const id = (new URLSearchParams(location.search).get('id') || '').trim().toUpperCase();
+
+  // Nombre y WhatsApp desde ajustes.js
+  if (A.negocio) {
+    document.title = A.negocio;
+    document.querySelectorAll('[data-negocio]').forEach(el => el.textContent = A.negocio);
+  }
+  if (A.whatsapp) {
+    const texto = id ? `Hola, quiero activar mi tarjeta ${id}` : 'Hola, me interesan las tarjetas NFC';
+    document.querySelectorAll('[data-whatsapp]').forEach(el => {
+      el.href = `https://wa.me/${A.whatsapp}?text=${encodeURIComponent(texto)}`;
+      el.hidden = false;
+    });
+  }
+
+  function mostrar(estado) {
+    document.querySelectorAll('.estado').forEach(el => el.classList.toggle('visible', el.id === estado));
+  }
+
+  // Cuenta el escaneo en GoatCounter (solo si lo activaste en ajustes.js)
+  function contarEscaneo(id) {
+    return new Promise(listo => {
+      if (!A.goatcounter) return listo();
+      const url = `https://${A.goatcounter}.goatcounter.com/count`
+        + `?p=${encodeURIComponent('/tarjeta/' + id)}`
+        + `&t=${encodeURIComponent('Tarjeta ' + id)}`
+        + `&rnd=${Math.random().toString(36).slice(2)}`;
+      let enviado = false;
+      try { enviado = navigator.sendBeacon(url); } catch (e) {}
+      if (enviado) return setTimeout(listo, 80);
+      const img = new Image();
+      img.onload = img.onerror = listo;
+      img.src = url;
+      setTimeout(listo, 700);
+    });
+  }
+
+  async function abrirTarjeta() {
+    try {
+      const r = await fetch(`tarjetas.json?v=${Date.now()}`, { cache: 'no-store' });
+      if (!r.ok) throw new Error('sin lista');
+      const lista = await r.json();
+      const t = lista[id];
+      const link = t && (typeof t === 'string' ? t : t.link);
+      const activa = t && (typeof t === 'string' || t.activa !== false);
+
+      if (!link || !activa || !/^https?:\/\//i.test(link)) return mostrar('inactiva');
+
+      if (t.cliente) document.getElementById('abriendo-detalle').textContent = t.cliente;
+      await contarEscaneo(id);
+      location.replace(link);
+    } catch (e) {
+      mostrar('error');
+    }
+  }
+
+  if (id) abrirTarjeta();
+</script>
 </body>
 </html>
