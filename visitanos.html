@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visítanos · Traffic Barber</title>
+<meta name="description" content="Dirección, horario y contacto de Traffic Barber en Av. San Marcos, Real de Toledo, Pachuca.">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="icono-192.png?v=3">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,800;1,800;1,900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sitio.css">
+<script src="animaciones.js" defer></script>
+<script type="module" src="sitio.js"></script>
+<script type="module" src="datos.js"></script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="razor">
+      <rect x="-92" y="-7" width="82" height="14" rx="7" fill="none" stroke="currentColor" stroke-width="3"/>
+      <path d="M-10,-10 L70,-13 Q86,-12 86,0 L86,4 Q86,9 78,9 L-10,9 Z" fill="currentColor"/>
+      <circle cx="-10" cy="0" r="4" fill="#0C0C0C"/>
+    </g>
+    <symbol id="razors" viewBox="0 0 200 120">
+      <use href="#razor" transform="translate(100,66) rotate(-32)"/>
+      <use href="#razor" transform="translate(100,66) scale(-1,1) rotate(-32)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="Traffic Barber, inicio">
+      <img class="brand-logo" src="logo.png" alt="Traffic Barber" width="900" height="377">
+    </a>
+    <nav class="links" aria-label="Principal">
+      <a href="index.html">Inicio</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="galeria.html">Galería</a>
+      <a href="visitanos.html" aria-current="page">Visítanos</a>
+    </nav>
+    <a class="btn btn-primary btn-agenda" href="agendar.html">Agenda tu cita</a>
+  </div>
+  <div class="pole" aria-hidden="true"></div>
+</header>
+
+<main>
+  <section class="wrap page-head">
+    <h1 class="display fx d1">Visítanos<span class="script">te esperamos</span></h1>
+    <p class="fx d2">Estamos en Real de Toledo. Llega sin cita o agenda en línea.</p>
+  </section>
+
+  <section class="wrap block reveal" style="padding-top:40px">
+    <div class="visit">
+      <div class="visit-card">
+        <h2 class="display">Dónde y cuándo</h2>
+        <div class="row">
+          <svg class="v-ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A5F20A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <div>Av. San Marcos, Real de Toledo<br><span>42119 Pachuca de Soto, Hgo.</span></div>
+        </div>
+        <div class="row">
+          <svg class="v-ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A5F20A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <div>Lunes a sábado · 11:30 a 22:00<br><span>Domingo cerrado</span></div>
+        </div>
+        <div class="actions" style="margin-top:4px">
+          <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=TB%20Barber%20shop%20Real%20de%20Toledo%20Pachuca&amp;query_place_id=ChIJnW-ZsGyh0YURKsS65CJwEzI" target="_blank" rel="noopener">Abrir en Google Maps</a>
+          <a class="btn btn-ghost" href="tel:+525573794461">Llamar</a>
+          <a class="btn btn-ghost" href="agendar.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Agendar</a>
+        </div>
+      </div>
+      <div class="shot facade">[FOTO DE LA FACHADA]</div>
+    </div>
+  </section>
+
+  <section id="barberos" class="wrap block reveal" style="padding-top:24px;padding-bottom:64px">
+    <div class="sec-head">
+      <h2 class="display">Quién te <span class="script">corta</span></h2>
+      <p>Conoce al equipo y síguelo en redes</p>
+    </div>
+    <div class="barber-grid" id="listaBarberos"></div>
+  </section>
+
+  <section class="hiring reveal" aria-label="Bolsa de trabajo">
+    <div class="wrap">
+      <div>
+        <div class="display">Se busca barbero</div>
+        <p>¿Tienes experiencia y buena actitud? Únete al equipo.</p>
+      </div>
+      <a class="btn btn-dark" href="https://wa.me/525573794461?text=Hola%2C%20me%20interesa%20la%20vacante%20de%20barbero" target="_blank" rel="noopener">Mándanos mensaje</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div><img class="foot-logo" src="logo.png" alt="Traffic Barber" width="900" height="377"><span>TB Barber shop · Real de Toledo</span></div>
+      <div class="foot-links"><a href="https://www.facebook.com/profile.php?id=61577432973040" target="_blank" rel="noopener">Facebook</a> · <a href="https://wa.me/525573794461" target="_blank" rel="noopener">WhatsApp</a> · <a href="tarjeta.html">Mi tarjeta</a> · <a href="privacidad.html">Aviso de privacidad</a></div>
+      <div>Sitio hecho por <a class="lilghost" href="https://lilghost99.github.io/Studio/" target="_blank" rel="noopener">LilGhost Studio</a></div>
+    </div>
+  </div>
+</footer>
+
+<a class="float" href="https://wa.me/525573794461?text=Hola%2C%20tengo%20una%20pregunta" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
+</a>
+
+</body>
+</html>

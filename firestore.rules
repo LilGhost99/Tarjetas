@@ -1,0 +1,138 @@
+rules_version = '2';
+
+// Reglas de seguridad para la tarjeta de Traffic Barber.
+// Pégalas en Firebase Console → Firestore Database → Reglas → Publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Un admin es un usuario con sesión iniciada cuyo UID está en la colección "admins"
+    function esAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /clientes/{clienteId} {
+      // Cualquiera puede ver UNA tarjeta si tiene su link (el ID es largo y aleatorio).
+      allow get: if true;
+      // Solo el admin puede listar o buscar clientes.
+      allow list: if esAdmin();
+
+      // Registro: cualquiera puede crear SU tarjeta, pero siempre empieza en 0 sellos.
+      // El admin también puede crearla (ej. walk-in sin cumpleaños).
+      allow create: if esAdmin() || request.resource.data.keys().hasOnly(
+                         ['nombre','telefono','cumple','sellos','facialCanjeado','tarjetas','creado'])
+                    && request.resource.data.nombre is string
+                    && request.resource.data.nombre.size() > 0
+                    && request.resource.data.nombre.size() <= 40
+                    && request.resource.data.telefono is string
+                    && request.resource.data.telefono.matches('^[0-9]{10}$')
+                    && request.resource.data.cumple is string
+                    && request.resource.data.cumple.matches('^[0-1][0-9]-[0-3][0-9]$')
+                    && request.resource.data.sellos == 0
+                    && request.resource.data.facialCanjeado == false
+                    && request.resource.data.tarjetas == 0
+                    && request.resource.data.creado == request.time;
+
+      // Solo el admin puede sellar, quitar sellos, entregar premios o borrar.
+      allow update, delete: if esAdmin();
+
+      // Historial de visitas: solo el admin.
+      match /visitas/{visitaId} {
+        allow read, write: if esAdmin();
+      }
+
+      // Promos personales de este cliente: las ve quien tenga el link de su tarjeta; solo el admin las crea o borra.
+      match /promos/{promoId} {
+        allow read: if true;
+        allow write: if esAdmin();
+      }
+    }
+
+    // Horas apartadas: solo dice qué día y hora están ocupados (sin datos del cliente).
+    // Cualquiera las ve para no agendar encima. Si la hora ya existe, nadie de la página puede volver a apartarla.
+    match /ocupados/{slot} {
+      allow read: if true;
+      allow create: if esAdmin()
+                    || (request.resource.data.keys().hasOnly(['fecha','hora','creado'])
+                        && request.resource.data.fecha is string
+                        && request.resource.data.fecha.matches('^20[0-9]{2}-[0-1][0-9]-[0-3][0-9]$')
+                        && request.resource.data.hora is string
+                        && request.resource.data.hora.matches('^[0-2][0-9]:00$')
+                        && slot == request.resource.data.fecha + '_' + request.resource.data.hora
+                        && request.resource.data.creado == request.time);
+      allow update, delete: if esAdmin();
+    }
+
+    // Citas: cualquiera puede pedir una desde la página (siempre entra "pendiente");
+    // el admin también las agenda (walk-ins), las ve, confirma, marca o borra.
+    match /citas/{citaId} {
+      allow create: if esAdmin() || request.resource.data.keys().hasOnly(
+                         ['nombre','telefono','servicioId','servicio','precio','fecha','hora','promo',
+                          'barbero','comentario','clienteId','nuevaTarjeta','estado','creado','precioNormal'])
+                    && request.resource.data.nombre is string
+                    && request.resource.data.nombre.size() > 0
+                    && request.resource.data.nombre.size() <= 40
+                    && request.resource.data.telefono is string
+                    && request.resource.data.telefono.matches('^[0-9]{10}$')
+                    && request.resource.data.servicioId is string
+                    && request.resource.data.servicioId.size() <= 30
+                    && request.resource.data.servicio is string
+                    && request.resource.data.servicio.size() <= 40
+                    && request.resource.data.precio is number
+                    && request.resource.data.precio >= 0
+                    && request.resource.data.precio <= 10000
+                    && (!('precioNormal' in request.resource.data) || (request.resource.data.precioNormal is number && request.resource.data.precioNormal >= request.resource.data.precio && request.resource.data.precioNormal <= 10000))
+                    && request.resource.data.fecha is string
+                    && request.resource.data.fecha.matches('^20[0-9]{2}-[0-1][0-9]-[0-3][0-9]$')
+                    && request.resource.data.hora is string
+                    && request.resource.data.hora.matches('^[0-2][0-9]:[0-5][0-9]$')
+                    && request.resource.data.promo is string
+                    && request.resource.data.promo.size() <= 80
+                    && request.resource.data.barbero is string
+                    && request.resource.data.barbero.size() <= 40
+                    && request.resource.data.comentario is string
+                    && request.resource.data.comentario.size() <= 120
+                    && request.resource.data.clienteId is string
+                    && request.resource.data.clienteId.size() <= 40
+                    && request.resource.data.nuevaTarjeta is bool
+                    && request.resource.data.estado == 'pendiente'
+                    && request.resource.data.creado == request.time
+                    && existsAfter(/databases/$(database)/documents/ocupados/$(request.resource.data.fecha + '_' + request.resource.data.hora));
+      allow read, update, delete: if esAdmin();
+    }
+
+    // Promociones para todos: cualquiera las ve, solo el admin las cambia.
+    match /promos/{promoId} {
+      allow read: if true;
+      allow write: if esAdmin();
+    }
+
+    // Reseñas que se muestran en la página: cualquiera las ve, solo el admin las cambia.
+    match /resenas/{resenaId} {
+      allow read: if true;
+      allow write: if esAdmin();
+    }
+
+    // Caja: cobros y gastos. Solo el admin.
+    match /caja/{movId} {
+      allow read, write: if esAdmin();
+    }
+
+    // Números del negocio (visitas y premios por mes): solo el admin.
+    match /stats/{mes} {
+      allow read, write: if esAdmin();
+    }
+
+    // Premios y regalo de cumpleaños: cualquiera los ve, solo el admin los cambia.
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if esAdmin();
+    }
+
+    // Cada admin solo puede comprobar su propio registro. Nadie puede escribir aquí desde la página.
+    match /admins/{uid} {
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+  }
+}
