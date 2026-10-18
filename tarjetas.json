@@ -3,5 +3,10 @@
     "cliente": "CAMI",
     "link": "https://www.youtube.com/",
     "activa": true
+  },
+  "WIFI1": {
+    "cliente": "Traffic Barber",
+    "link": "https://lilghost99.github.io/Traffic-Barber/",
+    "activa": true
   }
 }
